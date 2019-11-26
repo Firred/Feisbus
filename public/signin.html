@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ES-ES">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/style.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+    <title>Sign in</title>
+</head>
+<body>
+    <header>
+        <div class="title">FaceBluff</div>
+        <div class="user">
+            <div class="account"><img src="img/login.png" alt="login" class="accimg"><a href="/login">Log in</a></div>
+            <div class="account"><img src="img/signin.png" alt="signin" class="accimg"><a href="/signIn">Sign in</a></div>
+        </div>
+    </header>
+
+    <main>
+        <h1>Nuevo usuario</h1>
+        <div class="container">
+            <form action="/createUser" method="POST" class="form">
+                <div class="formElem">Mail <input type="text" name="mail" class="input"></div>
+                <div class="formElem">Password <input type="password" name="password" class="input"></div>
+                <div class="formElem">Name <input type="text" name="name" class="input"></div>
+                <div class="formElem">Gender 
+                    <input type="radio" name="gender" class="radius" value="M"> Male
+                    <input type="radio" name="gender" class="radius" value="F"> Female
+                    <input type="radio" name="gender" class="radius" value="O"> Other
+                </div>
+                <div class="formElem">Birthday <input type="date" name="birthday" class="input"></div>
+                <div class="formElem">Profile picture <input type="file" name="picture" class="input"></div>
+                
+                <input class="button" type="submit" value="Sign In">
+            </form>
+        </div>
+    </main>
+</body>
+</html>

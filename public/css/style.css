@@ -1,0 +1,329 @@
+* {
+    padding: 0%;
+    margin: 0%;
+}
+
+body{
+    font-family: 'Merryweather', serif;
+    padding-top: 120px;
+    color: whitesmoke;
+}
+
+header{
+    top: 0;
+    height: 120px;
+    width: 100%;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    z-index: 1000;
+    background-color: #44D63D;
+    color: whitesmoke;
+}
+
+.headerleft{
+    display: flex;
+    flex-direction: row;
+}
+
+.links{
+    margin: auto;
+    font-size: 2em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.title{
+    font-size: 5em;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.user{
+    margin-right: 5%;
+}
+
+.account{
+    padding-top: .5em;
+    padding-bottom: .5em;
+    display: block;
+}
+
+.accimg{
+    height: 16px;
+    margin-right: .3em;
+    filter: invert();
+}
+
+a{
+    color: whitesmoke;
+    text-decoration: none;
+}
+
+a:hover{
+    color: wheat;
+}
+
+h1{
+    color: black;
+    text-align: center;
+    padding-top: 2em;
+    margin-bottom: 1em;
+}
+
+.container{
+    margin: auto;
+    display: flex;
+    margin-top: 5%;
+    background-color: #4AE342;
+    width: 50%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    border-radius: 1em;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 80%;
+}
+
+.input{
+    width: 60%;
+}
+
+.formElem{
+    display: flex;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-top: .5em;
+    margin-bottom: .5em;
+    margin-right: 50%;
+    width: 90%;
+    justify-content: space-between;
+}
+
+.radius{
+    justify-content: space-between;
+}
+
+.button{
+    background-color: whitesmoke;
+    color: #4AE342;
+    font-size: 1.5em;
+    font-weight: bold;;
+    width: 25%;
+    padding: .25em;
+    margin: auto;
+    margin-top: .8em;
+    margin-bottom: .5em;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: .5em;
+}
+
+.profile{
+    display: flex;
+    flex-direction: column;
+}
+
+.profile div{
+    padding-top: .5em;
+}
+
+.profilepic{
+    margin-left: 5%;
+    margin-right: 3%;
+}
+
+.requestpic{
+    height: 75px;
+    width: 75px;
+    border-radius: 50%;
+    border: solid black 1px;
+}
+
+.emptycontainer{
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 1%;
+    width: 50%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    border-radius: 1em;
+    color: black;
+}
+
+.request{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 2em;
+}
+
+.requestleft{
+    padding-left: 1em;
+    padding-right: 1em;
+    display: flex;
+    flex-direction: row;
+}
+.requestleft div{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 1em;
+    margin-right: 1em;
+    font-weight: bold;
+}
+
+.requestright{
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.request a{
+    background-color: #44D63D;
+    color: whitesmoke;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.request a:hover{
+    color: wheat;
+}
+
+.search{
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+    font-weight: bold;
+}
+
+.searchform{
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 55%;
+}
+
+.searchinput{
+    width: 100%;
+}
+
+.searchbutton{
+    padding-right: 1em;
+    padding-left: 1em;
+}
+
+.userpic{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    margin-right: 2em;
+    margin-left: 2em;
+}
+
+.usermenu{
+   display: flex;
+   flex-direction: row;
+   width: 20%;
+}
+
+.profilecontainer{
+    display: flex;
+    flex-direction: row;
+}
+
+.profilebutton{
+    margin: auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.points{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.question{
+    width: 50%;
+    margin: auto;
+    background-color: #4AE342;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-left: 1em;
+    margin-bottom: .5em;
+    font-weight: bold;
+}
+
+.guess{
+    width: 100%;
+    margin: auto;
+    background-color: #4AE342;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-left: 1em;
+    margin-bottom: .5em;
+    font-weight: bold;
+}
+
+.selectedquestion{
+    background-color: darkcyan;
+}
+
+p{
+    color: black;
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+
+.secondarybutton{
+    background-color: #44D63D;
+    color: whitesmoke;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.answerbutton{
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.sf{
+    font-size: 2em;
+    font-weight: bolder;
+}
+
+.success{
+    color: #4AE342;
+}
+
+.fail{
+    color: crimson;
+}
+
+a.question {
+    display: flex;
+    width: 50%;
+    margin: auto;
+    background-color: #4AE342;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-left: 1em;
+    margin-bottom: .5em;
+    font-weight: bold;
+}
+
+a.question:hover {
+    background-color: #35A32F;
+}
+
+.button:hover{
+    color: wheat;
+}

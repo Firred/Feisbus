@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ES-ES">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/style.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+        <title>Friends</title>
+    </head>
+<body>
+    <header>
+        <div class="headerleft">
+            <div class="title">FaceBluff</div>
+            <div class="links"><a href="/friends">Friends</a></div>
+            <div class="links"><a href="/questions">Questions</a></div>
+        </div>
+        <div class="usermenu">
+            <div class="points">
+                <img src="img/smile.jpg" alt="user" class="userpic">
+                <b>50 pts</b>
+            </div>
+            <div class="user">
+                <div class="account"><img src="img/login.png" alt="login" class="accimg"><a href="/login">Profile</a></div>
+                <div class="account"><img src="img/signin.png" alt="signin" class="accimg"><a href="/signIn">Log out</a></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <h1>Friend Requests</h1>
+        <div class="emptycontainer">
+            <%friendRequest.forEach (request => { %>
+                <div class="request">
+                    <div class="requestleft">
+                        <img class="requestpic" src="<%= request.img %>" />
+                        <div class="friendname"> <%= request.name %> </div>
+                    </div>
+                    <div class="requestright">
+                        <a href="#" class="button">Accept</a>
+                        <a href="#" class="button">Ignore</a>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+
+        <h1>Search Friends</h1>
+        <div class="emptycontainer">
+            <div class="request">
+                <div class="search">Search by name:</div>
+
+                <form action="search" method="POST" class="searchform">
+                    <input type="text" name="search" class="searchinput">       
+                    
+                    <input type="submit" value="Search" class="button"> 
+                </form>
+                    
+            </div>
+        </div>
+
+        <h1>My Friends</h1>
+        <div class="emptycontainer">
+            
+            <% friends.forEach (friend => { %>
+                <div class="request">
+                    <div class="requestleft">
+                        <img class="requestpic" src="<%= friend.img %>" />
+                        <div class="friendname"> <%= friend.name %>> </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </main>
+</body>
+</html>
