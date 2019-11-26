@@ -51,43 +51,40 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "SELECT * FROM friends left join users ON emailUser1 = tag.taskId " +
-                    "WHERE user = ?;", email, function(err, result) {
+                    "SELECT userEmail1, F1.name as name1, F2.name as name2, F1.image as img1, F2.image as img2 FROM friends " +
+                    "left join users as F1 ON emailUser1 = F1.email " +
+                    "left join users as F2 ON emailUser2 = F2.email " +
+                    "WHERE emailUser1 = ? OR emailUser2 = ? AND accepted = 1;",
+                    email, function(err, result) {
                         connection.release();
 
                         if(err) {
-                            callback(new Error("Error de acceso a la base de datos"));
+                            callback(new Error("Error de acceso a la base de datos" + err));
                         }
                         else {
-                            let tasks = [];
-                            let t;
-                            let lastId = -1;
+                            let friends = [];
+                            let f;
 
                             if(result.length > 0) {
-                                lastId = -1;
-
-                                for(let fila of result) {
-                                    if(fila.id != lastId) {
-                                        if(lastId != -1) 
-                                            tasks.push(t);
-
-                                        lastId = fila.id;
-
-                                        t =  {
-                                            id : fila.id,
-                                            text: fila.text,
-                                            done: fila.done,
-                                            tags: []
-                                        };
+                                for(let row of result) {
+                                    if(row.userEmail1 == email) {
+                                        f = {
+                                            name: row.name2,
+                                            img: row.img2
+                                        }
+                                    }
+                                    else {
+                                        f = {
+                                            name: row.name1,
+                                            img: row.img1
+                                        }
                                     }
 
-                                    t.tags.push(fila.tag);
+                                    friends.push(f);
                                 }
-
-                                tasks.push(t);
                             }
                             
-                            callback(null, tasks);
+                            callback(null, friends);
                         }
                     }
                 )
@@ -95,6 +92,44 @@ class DAOUsers {
         });
     }
 
+    getFriendRequests(email, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    "SELECT friendEmail, F1.name as name1, F2.name as name2, F1.image as img1, F2.image as img2 FROM friends " +
+                    "left join users as F1 ON emailUser2 = F1.email " +
+                    "WHERE emailUser1 = ? AND accepted = 0;",
+                    email, function(err, result) {
+                        connection.release();
+
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos" + err));
+                        }
+                        else {
+                            let friends = [];
+                            let f;
+
+                            if(result.length > 0) {
+                                for(let row of result) {
+                                    f = {
+                                        name: row.name2,
+                                        img: row.img2
+                                    }
+
+                                    friends.push(f);
+                                }
+                            }
+                            
+                            callback(null, friends);
+                        }
+                    }
+                )
+            } 
+        });
+    }
 
     createUser(user, callback) {
         this.pool.getConnection(function(err, connection){

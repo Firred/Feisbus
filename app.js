@@ -64,7 +64,21 @@ let user = {
 
 let friendRequest = [user];
 app.get("/friends", function (request, response) {
-    response.render("friends", {friendRequest: friendRequest, friends: []});
+    DAOU.getFriends(email, function(err, friends) {
+        if(err) {
+            console.log(err);
+        }
+        else {
+            DAOU.getFriendRequests(email, function(err, friendRequests) {
+                if(err) {
+                    console.log(err);
+                }
+                else {
+                    response.render("friends", {friendRequest: friendRequests, friends: friends });
+                }
+            })
+        }
+    });
 });
 
 app.post("/createUser", function (request, response) {

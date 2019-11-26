@@ -1,0 +1,30 @@
+{
+  "name": "feisbus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "DAOUsers.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Firred/Feisbus.git"
+  },
+  "keywords": [
+    "AW",
+    "Practica",
+    "1"
+  ],
+  "author": "Adrián Ogáyar & Maikel Spranger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Firred/Feisbus/issues"
+  },
+  "homepage": "https://github.com/Firred/Feisbus#readme"
+}
