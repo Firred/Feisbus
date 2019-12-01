@@ -18,7 +18,7 @@
     <main>
         <h1>Nuevo usuario</h1>
         <div class="container">
-            <form action="/createUser" method="POST" class="form">
+            <form action="/createUser" method="POST" class="form" enctype="multipart/form-data">
                 <div class="formElem">Mail <input type="text" name="mail" class="input"></div>
                 <div class="formElem">Password <input type="password" name="password" class="input"></div>
                 <div class="formElem">Name <input type="text" name="name" class="input"></div>
@@ -32,6 +32,9 @@
                 
                 <input class="button" type="submit" value="Sign In">
             </form>
+            <% if(errMsg != null){ %>
+                <p class="error"><%=errMsg%></p>
+            <% } %>
         </div>
     </main>
 </body>

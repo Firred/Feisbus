@@ -7,6 +7,34 @@ class DAOUsers {
         this.pool = pool;
     }
 
+    login(email, pass, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if(err) {
+                callback(new Error("Connection error in the database"));
+            }
+            else {
+                connection.query(
+                    "SELECT email, points FROM users WHERE email = ? AND pass = ?;",
+                    [email, pass], function (err, result) {
+                        connection.release();
+
+                        if(err) {
+                            callback(new Error("Access error in the database" + err));
+                        }
+                        else {
+                            if(result.length > 0) {
+                                callback(null, result[0].points);
+                            }
+                            else {
+                                callback(null, null);
+                            }
+                        }
+                    }
+                );
+            }
+        })
+    }
+
     getUser(email, callback) {
         this.pool.getConnection(function (err, connection) {
             if(err) {
@@ -14,7 +42,7 @@ class DAOUsers {
             }
             else {
                 connection.query(
-                    "SELECT name, gender, birthday, image FROM users WHERE email = ?;",
+                    "SELECT email, name, gender, birthday, picture, points FROM users WHERE email = ?;",
                     email, function (err, result) {
                         connection.release();
 
@@ -24,14 +52,14 @@ class DAOUsers {
                         else {
                             let user;
 
-
                             if(result.length > 0) {
                                 user = {
-                                    email: email,
+                                    email: result[0].email,
                                     name: result[0].name,
                                     gender: result[0].gender,
                                     birthday: result[0].birthday,
-                                    image: result[0].image
+                                    img: result[0].picture,
+                                    points: result[0].points
                                 }
                             }
 
@@ -51,15 +79,15 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "SELECT userEmail1, F1.name as name1, F2.name as name2, F1.image as img1, F2.image as img2 FROM friends " +
+                    "SELECT emailUser1, F1.name as name1, F2.name as name2, F1.image as img1, F2.image as img2 FROM friends " +
                     "left join users as F1 ON emailUser1 = F1.email " +
                     "left join users as F2 ON emailUser2 = F2.email " +
-                    "WHERE emailUser1 = ? OR emailUser2 = ? AND accepted = 1;",
-                    email, function(err, result) {
+                    "WHERE (emailUser1 = ? OR emailUser2 = ?) AND accepted = 1;",
+                    [email, email], function(err, result) {
                         connection.release();
 
                         if(err) {
-                            callback(new Error("Error de acceso a la base de datos" + err));
+                            callback(new Error("Error de acceso a la base de datos"));
                         }
                         else {
                             let friends = [];
@@ -67,7 +95,7 @@ class DAOUsers {
 
                             if(result.length > 0) {
                                 for(let row of result) {
-                                    if(row.userEmail1 == email) {
+                                    if(row.emailUser1 == email) {
                                         f = {
                                             name: row.name2,
                                             img: row.img2
@@ -99,31 +127,31 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "SELECT friendEmail, F1.name as name1, F2.name as name2, F1.image as img1, F2.image as img2 FROM friends " +
-                    "left join users as F1 ON emailUser2 = F1.email " +
+                    "SELECT emailUser2 as friendEmail, users.name as name, users.image as img FROM friends " +
+                    "left join users ON emailUser2 = users.email " +
                     "WHERE emailUser1 = ? AND accepted = 0;",
-                    email, function(err, result) {
+                    [email], function(err, result) {
                         connection.release();
 
                         if(err) {
-                            callback(new Error("Error de acceso a la base de datos" + err));
+                            callback(new Error("Error de acceso a la base de datos"));
                         }
                         else {
-                            let friends = [];
-                            let f;
+                            let friendRequests = [];
+                            let r;
 
                             if(result.length > 0) {
                                 for(let row of result) {
-                                    f = {
-                                        name: row.name2,
-                                        img: row.img2
+                                    r = {
+                                        name: row.name,
+                                        img: row.img
                                     }
 
-                                    friends.push(f);
+                                    friendRequests.push(r);
                                 }
                             }
                             
-                            callback(null, friends);
+                            callback(null, friendRequests);
                         }
                     }
                 )
@@ -137,15 +165,33 @@ class DAOUsers {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else{
-                let sql = "INSERT INTO users (email, name, pass, gender, birthday, image)" +
-                " VALUES (?, ?, ?, ?, ?, ?);";
+                let sql = "INSERT INTO users (email, name, pass, gender"
+                let values = [user.email, user.name, user.pass, user.gender];
 
+                if(user.birthday) {
+                    sql += ", birthday";
+                    values.push(user.birthday);
+                }
+
+                if(user.picture != undefined) {
+                    sql += ", picture";
+                    values.push(user.picture);
+                }
+
+                sql += ") VALUES (";
+
+                for(let i = 0; i < values.length-1; i++) {
+                    sql += "?, "
+                }
+
+                sql += "?);";
+                
                 connection.query(
-                    sql, [user.email, user.name, user.pass, user.gender, user.birthday, user.image],
+                    sql, values,
                     function(err) {
 
                         if(err) {
-                            callback(new Error("Error de acceso a la base de datos") + err);
+                            callback(new Error("Error de acceso a la base de datos"));
                         }
                         else {
                             callback(null);
@@ -158,45 +204,32 @@ class DAOUsers {
         });
     }
 
-    markTaskDone(idTask, callback) {
-        this.pool.getConnection(function(err, connection) {
+    getUserImageName(email, callback){
+        this.pool.getConnection(function(err, connection){
             if(err){
-                callback(new Error("Error de conexión a la base de datos"));
+                callback("Error de conexión a la base de datos");
             }
-            else {
-                connection.query("UPDATE task SET done = 1 WHERE id = ?;", idTask,
-                function(err) {
-                    connection.release();
-
-                    if(err) {
-                        callback(new Error("Error de acceso a la base de datos"));
+            else{
+                let sql = 'SELECT picture FROM users WHERE email = ?;'
+                connection.query(
+                    sql, [email],
+                    function(err, result){
+                        connection.release()
+                        if(err){
+                            callback("Error de acceso a la base de datos")
+                        }
+                        else{
+                            if(result.length > 0){
+                                callback(null, result[0].img)
+                            }
+                            else{
+                                callback(null, null)
+                            }
+                        }
                     }
-                    else {
-                        callback(null);
-                    }
-                });
+                )
             }
-        });
-    }
-
-    deleteComplete(email, callback) {
-        this.pool.getConnection(function(err, connection) {
-            connection.release();
-
-            if(err) {
-                callback(new Error("Error de conexión a la base de datos"));
-            }   
-            else {
-                connection.query("DELETE FROM task WHERE done = 1 AND user = ?;", email, function(err) {
-                    if(err) {
-                        callback(new Error("Error de acceso a la base de datos"));
-                    }
-                    else {
-                        callback(null);
-                    }
-                });
-            } 
-        });
+        })
     }
 };
 
