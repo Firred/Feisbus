@@ -18,9 +18,17 @@
                             <img class="requestpic" src="/userImage/<%= request.email %>" />
                             <div class="friendname"> <a href="/profile/<%=request.email%>"> <%= request.name %> </a></div>
                         </div>
+
                         <div class="requestright">
-                            <a href="#" class="button">Accept</a>
-                            <a href="#" class="button">Ignore</a>
+                            <form action="acceptFriend" method="POST">
+                                <input type="hidden" name="friend" value="<%=request.email%>">
+                                <input type="submit" value="Accept">
+                            </form>
+
+                            <form action="ignore" method="POST">
+                                <input type="hidden" name="friend" value="<%=request.email%>">
+                                <input type="submit" value="Ignore">
+                            </form>
                         </div>
                     </div>
                 <% }); %>

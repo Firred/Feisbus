@@ -89,7 +89,7 @@ app.post("/login", function(request, response) {
         if(points !== null){
             request.session.currentUser = request.body.mail;
             request.session.userPoints = points;
-            response.redirect("/question");
+            response.redirect("/profile");
         }
         else{
             response.render("login", {errMsg : "Email and/or password incorrect."});
@@ -116,17 +116,14 @@ app.get("/userImage", function(request, response) {
                 response.sendFile(path.join(__dirname, 'public', 'img/smile.jpg'));
             }
             else{
-                response.sendFile(path.join(__dirname, '/profile_imgs/' + img));
+                response.sendFile(path.join(__dirname, 'profile_imgs' + img));
             }
         }
     });
 });
 
 app.get("/userImage/:email", function(request, response) {
-    DAOU.getUserImageName(email, function(err, img){
-
-
-        
+    DAOU.getUserImageName(request.params.email, function(err, img){
         if(err){
             console.log(err);
         }
@@ -253,7 +250,7 @@ app.post("/search", middlewareCheckUser, function(request, response) {
     });
 });
 
-app.get("/question", middlewareCheckUser, function (request, response) {
+app.get("/questions", middlewareCheckUser, function (request, response) {
 
     response.redirect("/profile")
 });
@@ -267,6 +264,44 @@ app.get("/updateProfile", middlewareCheckUser, function (request, response) {
         else {
             response.render("updateProfile", {user});
         }
+    });
+});
+
+app.post("/requestFriend", middlewareCheckUser, function(request, response) {
+    DAOU.existsFriendship(response.locals.userEmail, request.body.user,
+        function(err, result) {
+            if(err) {
+                console.log(err);
+            }
+            else {
+                if(result) {
+                    response.redirect("/friends");
+                } 
+                else {
+                    DAOU.friendRequest(response.locals.userEmail, request.body.user,
+                        function(err) {
+                            if(err) {
+                                console.log(err);
+                            }
+                            else {
+                                response.redirect("/friends");
+                            }
+                        }
+                    );
+                }     
+            }
+    });   
+});
+
+app.post("/acceptFriend", middlewareCheckUser, function(request, response) {
+    DAOU.acceptFriend(response.locals.userEmail, request.body.friend,
+        function(err) {
+            if(err) {
+                console.log(err);
+            }
+            else {
+                response.redirect("/friends");
+            }
     });
 });
 

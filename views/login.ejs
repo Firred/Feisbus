@@ -10,10 +10,11 @@
         <header>
             <div class="title">FaceBluff</div>
             <div class="user">
-                <div class="account"><img src="img/login.png" alt="login" class="accimg"><a href="/login.html">Log in</a></div>
+                <div class="account"><img src="img/login.png" alt="login" class="accimg"><a href="/login">Log in</a></div>
                 <div class="account"><img src="img/signin.png" alt="signin" class="accimg"><a href="/signin">Sign in</a></div>
             </div>
         </header>
+        
         <main>
             <h1>Log in</h1>
             <div class="container">
@@ -21,7 +22,6 @@
                     <div class="formElem">Email <input class="input" type="text" name="mail" value="" placeholder="name@service.somthing"></div>
                     <div class="formElem">Password <input class="input" type="password" name="password" placeholder="********"></div>
                     <input class="button" type="submit" value="Log in">
-                    <!--<a href="#" class="button">Log in</a>-->
                 </form>
 
                 <% if(typeof errMsg !== 'undefined'){ %>

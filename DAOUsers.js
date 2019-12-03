@@ -79,7 +79,7 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "SELECT emailUser1, F1.name as name1, F2.name as name2, F1.picture as img1, F2.picture as img2 FROM friends " +
+                    "SELECT emailUser1 as email, F1.name as name1, F2.name as name2, F1.picture as img1, F2.picture as img2 FROM friends " +
                     "left join users as F1 ON emailUser1 = F1.email " +
                     "left join users as F2 ON emailUser2 = F2.email " +
                     "WHERE (emailUser1 = ? OR emailUser2 = ?) AND accepted = 1;",
@@ -97,12 +97,14 @@ class DAOUsers {
                                 for(let row of result) {
                                     if(row.emailUser1 == email) {
                                         f = {
+                                            email: row.email,
                                             name: row.name2,
                                             img: row.img2
                                         }
                                     }
                                     else {
                                         f = {
+                                            email: row.email,
                                             name: row.name1,
                                             img: row.img1
                                         }
@@ -127,9 +129,9 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "SELECT emailUser2 as friendEmail, users.name as name, users.picture as img FROM friends " +
-                    "left join users ON emailUser2 = users.email " +
-                    "WHERE emailUser1 = ? AND accepted = 0;",
+                    "SELECT emailUser1 as email, users.name as name, users.picture as img FROM friends " +
+                    "left join users ON emailUser1 = users.email " +
+                    "WHERE emailUser2 = ? AND accepted = 0;",
                     [email], function(err, result) {
                         connection.release();
 
@@ -143,6 +145,7 @@ class DAOUsers {
                             if(result.length > 0) {
                                 for(let row of result) {
                                     r = {
+                                        email: row.email,
                                         name: row.name,
                                         img: row.img
                                     }
@@ -263,6 +266,81 @@ class DAOUsers {
 
                             callback(null, users);
                         }
+                    }
+                )
+            }
+        });
+    }
+
+    friendRequest(user, friend, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    'INSERT INTO friends (emailUser1, emailUser2) VALUES (?, ?)', [user, friend],
+                    function(err){
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null);
+                        }
+
+                        connection.release();
+                    }
+                )
+            }
+        });
+    }
+
+    acceptFriend(user, friend, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    "UPDATE friends SET accepted = 1 WHERE emailUser2 = ? AND emailUser1 = ?;", [user, friend],
+                    function(err){
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null);
+                        }
+
+                        connection.release();
+                    }
+                )
+            }
+        });
+    }
+
+    existsFriendship(user, friend, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    "SELECT * WHERE (emailUser1 = ? AND emailUser2 = ?) OR (emailUser2 = ? AND emailUser1 = ?);",
+                    [user, friend, user, friend],
+                    function(err, result){
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos" + err));
+                        }
+                        else {
+                            if(result.length > 0) {
+                                callback(null, true);
+                            }
+                            else {
+                                callback(null, false);
+                            }
+                        }
+
+                        connection.release();
                     }
                 )
             }
