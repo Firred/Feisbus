@@ -79,7 +79,7 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "SELECT emailUser1, F1.name as name1, F2.name as name2, F1.image as img1, F2.image as img2 FROM friends " +
+                    "SELECT emailUser1, F1.name as name1, F2.name as name2, F1.picture as img1, F2.picture as img2 FROM friends " +
                     "left join users as F1 ON emailUser1 = F1.email " +
                     "left join users as F2 ON emailUser2 = F2.email " +
                     "WHERE (emailUser1 = ? OR emailUser2 = ?) AND accepted = 1;",
@@ -87,7 +87,7 @@ class DAOUsers {
                         connection.release();
 
                         if(err) {
-                            callback(new Error("Error de acceso a la base de datos"));
+                            callback(new Error("Error de acceso a la base de datos" + err));
                         }
                         else {
                             let friends = [];
@@ -127,14 +127,14 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "SELECT emailUser2 as friendEmail, users.name as name, users.image as img FROM friends " +
+                    "SELECT emailUser2 as friendEmail, users.name as name, users.picture as img FROM friends " +
                     "left join users ON emailUser2 = users.email " +
                     "WHERE emailUser1 = ? AND accepted = 0;",
                     [email], function(err, result) {
                         connection.release();
 
                         if(err) {
-                            callback(new Error("Error de acceso a la base de datos"));
+                            callback(new Error("Error de acceso a la base de datos" + err));
                         }
                         else {
                             let friendRequests = [];
@@ -207,7 +207,7 @@ class DAOUsers {
     getUserImageName(email, callback){
         this.pool.getConnection(function(err, connection){
             if(err){
-                callback("Error de conexión a la base de datos");
+                callback(new Error("Error de conexión a la base de datos"));
             }
             else{
                 let sql = 'SELECT picture FROM users WHERE email = ?;'
@@ -216,7 +216,7 @@ class DAOUsers {
                     function(err, result){
                         connection.release()
                         if(err){
-                            callback("Error de acceso a la base de datos")
+                            callback(new Error("Error de acceso a la base de datos"))
                         }
                         else{
                             if(result.length > 0){
@@ -229,7 +229,44 @@ class DAOUsers {
                     }
                 )
             }
-        })
+        });
+    }
+
+    searchUser (name, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                let sql = 'SELECT email, name FROM users WHERE name LIKE ?;'
+                connection.query(
+                    sql, ["%"+name+"%"],
+                    function(err, result){
+                        connection.release()
+                        if(err){
+                            callback(new Error("Error de acceso a la base de datos" + err))
+                        }
+                        else{
+                            let users = [];
+                            let u;
+
+                            if(result.length > 0) {
+                                for(let row of result) {
+                                    u = {
+                                        email: row.email,
+                                        name: row.name
+                                    }
+
+                                    users.push(u);
+                                }
+                            }
+
+                            callback(null, users);
+                        }
+                    }
+                )
+            }
+        });
     }
 };
 

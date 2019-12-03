@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ES-ES">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/style.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+        <title>Search</title>
+    </head>
+<body>
+    <%- include("header") %>
+
+    <main>
+        <h1>Results of the search:</h1>
+
+        <div class="emptycontainer">
+            <% users.forEach(user => { %>
+                <div class="request">
+                    <div class="requestleft">
+                        <img class="requestpic" src="/userImage/<%=user.email%>" />
+                        <div class="friendname"><a href="/profile/<%=user.email%>"><%= user.name %></a></div>
+                    </div>
+                    <div class="requestright">
+                        <a href="#" class="button">Request friendship</a>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </main>
+</body>
+</html>

@@ -73,11 +73,11 @@ function middlewareCheckUser(request, response, next) {
 };
 
 app.get("/", function(request, response) {
-    response.redirect("/login.html");
+    response.redirect("/login");
 });
 
 app.get("/login", function (request, response) {
-    response.render("/login");
+    response.render("login");
 });
 
 app.post("/login", function(request, response) {
@@ -103,17 +103,17 @@ app.get("/logout", function(request, response) {
 });
 
 app.get("/signin", function (request, response) {
-    response.redirect("/signin.html");
+    response.render("signin");
 });
 
-app.get("userImage", function(request, response) {
+app.get("/userImage", function(request, response) {
     DAOU.getUserImageName(response.locals.userEmail, function(err, img){
         if(err){
             console.log(err);
         }
         else{
             if(img == null){
-                response.sendFile(path.join(__dirname, 'public', '/img/NoPerfil.png'));
+                response.sendFile(path.join(__dirname, 'public', 'img/smile.jpg'));
             }
             else{
                 response.sendFile(path.join(__dirname, '/profile_imgs/' + img));
@@ -122,13 +122,32 @@ app.get("userImage", function(request, response) {
     });
 });
 
+app.get("/userImage/:email", function(request, response) {
+    DAOU.getUserImageName(email, function(err, img){
+
+
+        
+        if(err){
+            console.log(err);
+        }
+        else{
+            if(img == null){
+                response.sendFile(path.join(__dirname, 'public', 'img/smile.jpg'));
+            }
+            else{
+                response.sendFile(path.join(__dirname, 'profile_imgs' + img));
+            }
+        }
+    });
+});
+
 app.get("/friends", middlewareCheckUser, function (request, response) {
-    DAOU.getFriends("orueba@ucm.es", function(err, friends) {
+    DAOU.getFriends(response.locals.userEmail, function(err, friends) {
         if(err) {
             console.log(err);
         }
         else {
-            DAOU.getFriendRequests("orueba@ucm.es", function(err, friendRequests) {
+            DAOU.getFriendRequests(response.locals.userEmail, function(err, friendRequests) {
                 if(err) {
                     console.log(err);
                 }
@@ -183,6 +202,20 @@ app.get("/profile", middlewareCheckUser, function (request, response) {
             else
                 user["age"] = "?"
 
+            switch (user.gender) {
+                case 'M':
+                    user.gender = 'Male';
+                    break;
+            
+                case 'F':
+                    user.gender = 'Female';
+                    break;
+
+                default:
+                    user.gender = 'Other';
+                    break;
+            }
+
             let owner = response.locals.userEmail == user.email ? true : false;
 
             response.render("profile", {user, owner});
@@ -203,8 +236,19 @@ app.get("/profile/:id", middlewareCheckUser, function (request, response) {
                 response.render("profile", {user: user, owner: false});
             }
             else {
-                response.redirect("/userNotFound.html");
+                response.render("userNotFound");
             }
+        }
+    });
+});
+
+app.post("/search", middlewareCheckUser, function(request, response) {
+    DAOU.searchUser(request.body.search, function(err, users){
+        if(err) {
+            console.log(err);
+        }
+        else {
+            response.render("search", {users});
         }
     });
 });

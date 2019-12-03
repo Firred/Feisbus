@@ -24,7 +24,7 @@
                     <!--<a href="#" class="button">Log in</a>-->
                 </form>
 
-                <% if(errMsg != null){ %>
+                <% if(typeof errMsg !== 'undefined'){ %>
                     <p class="error"><%=errMsg%></p>
                 <% } %>
             </div>

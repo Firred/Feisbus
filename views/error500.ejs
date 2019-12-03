@@ -6,30 +6,16 @@
         <link href="/css/style.css" rel="stylesheet" type="text/css">
     </head>
 
-    <header>
-        <div class="headerleft">
-            <div class="title">FaceBluff</div>
-            <div class="links"><a href="#">Friends</a></div>
-            <div class="links"><a href="#">Questions</a></div>
-        </div>
-        <div class="usermenu">
-            <div class="points">
-                <img src="resources/img/smile.jpg" alt="user" class="userpic">
-                <b>50 pts</b>
-            </div>
-            <div class="user">
-                <div class="account"><img src="resources/img/login.png" alt="login" class="accimg"><a href="#">Profile</a></div>
-                <div class="account"><img src="resources/img/signin.png" alt="signin" class="accimg"><a href="#">Log out</a></div>
-            </div>
-        </div>
-    </header>
-
     <body>
-        <h1>500 - Error interno del servidor</h1>
+        <%- include("header") %>
 
-        <p>Se ha producido el siguiente error: <%= mensaje %></p>
-        <p>Pila de ejecución:</p>
+        <main>
+            <h1>500 - Error interno del servidor</h1>
 
-        <pre><%= pila %></pre>
+            <p>Se ha producido el siguiente error: <%= mensaje %></p>
+            <p>Pila de ejecución:</p>
+
+            <pre><%= pila %></pre>
+        </main>
     </body>
 </html>
