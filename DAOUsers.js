@@ -223,7 +223,7 @@ class DAOUsers {
                         }
                         else{
                             if(result.length > 0){
-                                callback(null, result[0].img)
+                                callback(null, result[0].picture)
                             }
                             else{
                                 callback(null, null)
@@ -325,7 +325,7 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "SELECT * WHERE (emailUser1 = ? AND emailUser2 = ?) OR (emailUser2 = ? AND emailUser1 = ?);",
+                    "SELECT * FROM friends WHERE (emailUser1 = ? AND emailUser2 = ?) OR (emailUser2 = ? AND emailUser1 = ?);",
                     [user, friend, user, friend],
                     function(err, result){
                         if(err) {
@@ -338,6 +338,30 @@ class DAOUsers {
                             else {
                                 callback(null, false);
                             }
+                        }
+
+                        connection.release();
+                    }
+                )
+            }
+        });
+    }
+
+    ignoreFriend (user, friend, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    "DELETE FROM `friends` WHERE emailUser2 = ? AND emailUser1 = ?;",
+                    [user, friend],
+                    function(err){
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos" + err));
+                        }
+                        else {
+                            callback(null);
                         }
 
                         connection.release();
