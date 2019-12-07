@@ -22,7 +22,7 @@ const middlewareSession = session({
 });
 
 const app = express();
-const multerFactory = multer({ storage: multer.memoryStorage() });
+const multerFactory = multer({ dest: path.join(__dirname, "images") });
 
 const pool = mysql.createPool(config.mysqlConfig);
 const DAOU = new libDAOUser.DAOUsers(pool);
@@ -108,7 +108,7 @@ app.get("/signin", function (request, response) {
     response.render("signin");
 });
 
-app.get("/userImage", function(request, response) {
+app.get("/userImage", middlewareCheckUser, function(request, response) {
     DAOU.getUserImageName(response.locals.userEmail, function(err, img){
         if(err){
             console.log(err);
@@ -118,7 +118,7 @@ app.get("/userImage", function(request, response) {
                 response.sendFile(path.join(__dirname, 'public', 'img/smile.jpg'));
             }
             else{
-                response.sendFile(path.join(__dirname, 'profile_imgs' + img));
+                response.sendFile(path.join(__dirname, 'images', img));
             }
         }
     });
@@ -165,8 +165,11 @@ app.post("/createUser", multerFactory.single("picture"), function (request, resp
         pass: request.body.password,
         gender: request.body.gender,
         birthday: request.body.birthday,
-        picture: request.file != undefined ? request.file.buffer : undefined
+        picture: request.file != undefined ? request.file.filename : undefined
     }
+
+    console.log(user.picture)
+    console.log(`${request.file.path}`)
 
     DAOU.getUser(user.email, function(err, result) {
         if(err) {
@@ -230,7 +233,24 @@ app.get("/profile/:id", middlewareCheckUser, function (request, response) {
         }
         else {
             if(user != undefined) {
-                user["age"] = utils.calculateAge(user.birthday, new Date());
+                if(user.birthday) 
+                    user["age"] = utils.calculateAge(user.birthday, new Date());
+                else
+                    user["age"] = "?"
+
+                switch (user.gender) {
+                    case 'M':
+                        user.gender = 'Male';
+                        break;
+                
+                    case 'F':
+                        user.gender = 'Female';
+                        break;
+
+                    default:
+                        user.gender = 'Other';
+                        break;
+                }
 
                 response.render("profile", {user: user, owner: false});
             }
@@ -313,6 +333,18 @@ app.post("/requestFriend", middlewareCheckUser, function(request, response) {
 
 app.post("/acceptFriend", middlewareCheckUser, function(request, response) {
     DAOU.acceptFriend(response.locals.userEmail, request.body.friend,
+        function(err) {
+            if(err) {
+                console.log(err);
+            }
+            else {
+                response.redirect("/friends");
+            }
+    });
+});
+
+app.post("/ignoreFriend", middlewareCheckUser, function(request, response) {
+    DAOU.ignoreFriend(response.locals.userEmail, request.body.friend,
         function(err) {
             if(err) {
                 console.log(err);
