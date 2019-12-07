@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ES-ES">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/style.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+        <title>Random Questions</title>
+    </head>
+<body>
+    <%- include("header") %>
+
+    <main>
+        <h1>Randomly selected questions</h1>
+        <div>
+            <% questions.foreach(question => { %>
+                <a href="/question/<%=question.id%>" class="question"><%question.text%></a>
+            <% }); %>
+        </div>
+        <h1>Add your questions!!</h1>
+        <div class="request">
+            <a href="/createQuestion" class="button">Create new question</a>
+        </div>
+    </main>
+</body>
+</html>

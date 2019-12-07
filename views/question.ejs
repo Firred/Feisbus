@@ -10,7 +10,6 @@
     <%- include("header") %>
     
     <main>
-
         <h1> <%= question.text %></h1>
         <div class="emptycontainer">
             <% if(user.answer) { %>
@@ -21,7 +20,7 @@
                 </div>
             <% } %>
 
-            <p>The following friends have answert the question:</p>
+            <p>The following friends have answered the question:</p>
 
             <% friendsAnswers.forEach(answer => { %>
                 <div class="request">

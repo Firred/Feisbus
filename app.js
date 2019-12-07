@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const utils = require("./utils");
 const libDAOUser = require("./DAOUsers");
+const libDAOQuestions = require("./DAOQuestions");
 const session = require("express-session");
 const sessionMySQL = require("express-mysql-session");
 
@@ -25,6 +26,7 @@ const multerFactory = multer({ storage: multer.memoryStorage() });
 
 const pool = mysql.createPool(config.mysqlConfig);
 const DAOU = new libDAOUser.DAOUsers(pool);
+const DAOQ = new libDAOQuestions.DAOQuestions(pool);
 
 app.listen(config.port, function(err) {
     if (err) {
@@ -251,8 +253,24 @@ app.post("/search", middlewareCheckUser, function(request, response) {
 });
 
 app.get("/questions", middlewareCheckUser, function (request, response) {
+    DAOQ.getQuestions(function(err, questions){
+        if(err) {
+            console.log(err);
+        }
+        else{
+            response.render("randomQuestions", {questions : questions});
+        }
+    });
+});
 
-    response.redirect("/profile")
+app.get("/question/:id", middlewareCheckUser, function (request, response) {
+
+    response.render("question");
+});
+
+app.get("/createQuestion", middlewareCheckUser, function (request, response) {
+
+    response.render("createQuestion");
 });
 
 app.get("/updateProfile", middlewareCheckUser, function (request, response) {
