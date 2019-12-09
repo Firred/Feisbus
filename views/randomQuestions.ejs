@@ -12,13 +12,13 @@
     <main>
         <h1>Randomly selected questions</h1>
         <div>
-            <% questions.foreach(question => { %>
-                <a href="/question/<%=question.id%>" class="question"><%question.text%></a>
+            <% questions.forEach(question => { %>
+                <a href="/question/<%=question.id%>" class="question"><%=question.text%></a>
             <% }); %>
         </div>
         <h1>Add your questions!!</h1>
         <div class="request">
-            <a href="/createQuestion" class="button">Create new question</a>
+            <a href="/newQuestion" class="button">Create new question</a>
         </div>
     </main>
 </body>

@@ -12,9 +12,10 @@
     <main>
         <h1> <%= question.text %></h1>
         <div class="emptycontainer">
-            <% if(user.answer) { %>
-                <p>You didn't answer this question yet.</p>
+            <% if(answer) { %>
+                <p>Your answer was <%=answer%></p>
             <% } else { %>
+                <p>You didn't answer this question yet.</p>
                 <div class="answerbutton"> 
                     <a href="#" class="button secondarybutton">Answer this question</a> 
                 </div>
@@ -22,17 +23,17 @@
 
             <p>The following friends have answered the question:</p>
 
-            <% friendsAnswers.forEach(answer => { %>
+            <% friendsAnswers.forEach(fanswer => { %>
                 <div class="request">
                     <div class="requestleft">
-                        <img class="requestpic" src="<%= answer.img %>"/>
-                        <div class="friendname"><%= answer.name %></div>
+                        <img class="requestpic" src="<%= fanswer.img %>"/>
+                        <div class="friendname"><%= fanswer.name %></div>
                     </div>
 
                     <div class="requestright">
-                        <% if(answer.correct == null) { %>
+                        <% if(fanswer.correct == null) { %>
                             <a href="#" class="button">Guess</a>
-                        <% } else if(answer.correct == 1) {%>
+                        <% } else if(fanswer.correct == 1) {%>
                             <div class="sf success">Success</div>
                         <% } else { %>
                             <div class="sf fail">Fail</div>

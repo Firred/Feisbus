@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const utils = require("./utils");
 const libDAOUser = require("./DAOUsers");
+const libDAOQuestions = require("./DAOQuestions");
 const session = require("express-session");
 const sessionMySQL = require("express-mysql-session");
 
@@ -26,6 +27,7 @@ const multerPhotos = multer({ dest: path.join(__dirname, "photos") });
 
 const pool = mysql.createPool(config.mysqlConfig);
 const DAOU = new libDAOUser.DAOUsers(pool);
+const DAOQ = new libDAOQuestions.DAOQuestions(pool);
 
 app.listen(config.port, function(err) {
     if (err) {
@@ -293,7 +295,63 @@ app.post("/search", middlewareCheckUser, function(request, response) {
 });
 
 app.get("/questions", middlewareCheckUser, function (request, response) {
-    response.redirect("/profile")
+    DAOQ.getQuestions(function(err, questions){
+        if(err){
+            console.log(err);
+        }
+        else{
+            response.render("randomQuestions", {questions});
+        }
+    });
+});
+
+app.get("/newQuestion", middlewareCheckUser, function (request, response) {
+    response.render("newQuestion");
+});
+
+app.post("/createQuestion", middlewareCheckUser, function (request, response) {
+    DAOQ.createQuestion(request.body.question, function(err, questionId){
+        if(err){
+            console.log(err);
+        }
+        else{
+            let answers = request.body.answers.split('\n');
+
+            DAOQ.createAnswers(questionId, answers, function (err){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    response.redirect("/question/" + questionId);
+                }
+            });
+        }
+    });
+});
+
+app.get("/question/:id", middlewareCheckUser, function (request, response) {
+    DAOQ.getSingleQuestion(request.params.id, function(err, question){
+        if(err){
+            console.log(err);
+        }
+        else{
+            DAOQ.userAnswer(response.locals.userEmail, question.id, function (err, answer){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    DAOQ.friendAnswers(response.locals.userEmail, question.id, function (err, friendsAnswers){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            response.render("question", {question, answer, friendsAnswers});
+                        }
+                    }) 
+                }
+            })
+        }
+    });
 });
 
 app.get("/updateProfile", middlewareCheckUser, function (request, response) {
@@ -414,6 +472,7 @@ app.post("/addPhoto", middlewareCheckUser, multerPhotos.single("photo"), functio
                                     console.log(err);
                                 }
                                 else {
+                                    request.session.userPoints = points;
                                     response.redirect("/profile")
                                 }
                             });
@@ -428,7 +487,7 @@ app.post("/addPhoto", middlewareCheckUser, multerPhotos.single("photo"), functio
     else {
         request.session.msg = "You don't have enough points.";
 
-        response.render("profile");
+        response.redirect("profile");
     }
 
 });

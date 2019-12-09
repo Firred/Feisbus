@@ -58,3 +58,9 @@ CREATE TABLE IF NOT EXISTS photos (
     description varchar(400),
     CONSTRAINT FK_PUSER FOREIGN KEY (userEmail) REFERENCES users (email)
 );
+
+INSERT INTO `questions` (`id`, `text`) VALUES (NULL, '¿Cuál es la peor película de la historia?');
+INSERT INTO `questions` (`id`, `text`) VALUES (NULL, '¿En qué escuela primaria estudiaste?');
+INSERT INTO `questions` (`id`, `text`) VALUES (NULL, '¿Nintendo switch, PS4 o XBOX ONE?');
+INSERT INTO `questions` (`id`, `text`) VALUES (NULL, '¿Cuál es tu plato favorito?');
+INSERT INTO `questions` (`id`, `text`) VALUES (NULL, '¿Cuál es el personaje más irritante de Juego de Tronos?');

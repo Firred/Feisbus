@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ES-ES">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/style.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+        <title>Random Questions</title>
+    </head>
+<body>
+    <%- include("header") %>
+
+    <main>
+        <h1>Create new question</h1>
+        <div class="container">
+            <form action="/createQuestion" method="POST" class="form">
+                <div class="formElement">Question <input type="text" name="question" class="input"></div>
+                <div class="formElement">Answers <textarea name="answers" rows="5" cols="30"></textarea></div>
+                <input class="button" type="submit" value="Create question">
+            </form>
+        </div>
+    </main>
+</body>
+</html>
