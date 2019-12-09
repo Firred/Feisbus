@@ -278,12 +278,24 @@ class DAOUsers {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else{
+                let sql = 'UPDATE users SET pass = ?, name = ?, birthday = ?, gender = ?'
+                let params = [user.pass, user.name, user.birthday, user.gender]
+
+                if(user.picture) {
+                    sql += ', picture = ? WHERE email = ?;';
+                    params.push(user.picture);
+                    params.push(user.email);
+                }
+                else {
+                    'WHERE email = ?;';
+                    params.push(user.email);
+                }
+
                 connection.query(
-                    'UPDATE users SET pass = ?, name = ?, birthday = ?, gender = ?, picture = ? WHERE email = ?;',
-                    [user.pass, user.name, user.birthday, user.gender, user.picture, user.email],
+                    sql, params,
                     function(err){
                         if(err) {
-                            callback(new Error("Error de acceso a la base de datos"));
+                            callback(new Error("Error de acceso a la base de datos " + err));
                         }
                         else {
                             callback(null);

@@ -316,7 +316,7 @@ app.post("/updateUser", middlewareCheckUser, multerImages.single("picture"), fun
         else {
             let user = {
                 email: response.locals.userEmail,
-                pass: request.body.newPassword != undefined ? request.body.newPassword : request.body.oldPassword,
+                pass: request.body.newPassword != "" ? request.body.newPassword : request.body.password,
                 name: request.body.name,
                 gender: request.body.gender,
                 birthday: request.body.birthday,
@@ -414,6 +414,7 @@ app.post("/addPhoto", middlewareCheckUser, multerPhotos.single("photo"), functio
                                     console.log(err);
                                 }
                                 else {
+                                    
                                     response.redirect("/profile")
                                 }
                             });
@@ -427,8 +428,7 @@ app.post("/addPhoto", middlewareCheckUser, multerPhotos.single("photo"), functio
     }
     else {
         request.session.msg = "You don't have enough points.";
-
-        response.render("profile");
+        response.redirect("/profile");
     }
 
 });
