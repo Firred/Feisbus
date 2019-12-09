@@ -22,8 +22,29 @@
                     </div>
                 </div>
 
+                <div class="photos">
+                    <% photos.forEach(photo => { %>
+                        <div class="photo">
+                            <img src="/getPhoto/<%= photo.name %>">
+                            <%= photo.description %>
+                        </div>
+                    <% }); %>
+                </div>
+
                 <% if(owner) { %>
                     <div class="profilebutton"><a href="/updateProfile" class="button">Update profile</a></div>
+                    
+                    <form action="/addPhoto" method="POST" enctype="multipart/form-data">
+                        <div class="formElem">
+                            <input class="button" type="submit" value="Add Photo">
+                            <input type="file" name="photo" class="input">
+                            <input type="text" name="description" class="input">
+                        </div>            
+                    </form>
+
+                    <% if(typeof errMsg !== 'undefined'){ %>
+                        <p class="error"><%=errMsg%></p>
+                    <% } %> 
                 <% } %>
             </div>
         </main>

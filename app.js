@@ -7,7 +7,6 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const utils = require("./utils");
 const libDAOUser = require("./DAOUsers");
-const libDAOQuestions = require("./DAOQuestions");
 const session = require("express-session");
 const sessionMySQL = require("express-mysql-session");
 
@@ -22,11 +21,11 @@ const middlewareSession = session({
 });
 
 const app = express();
-const multerFactory = multer({ dest: path.join(__dirname, "images") });
+const multerImages = multer({ dest: path.join(__dirname, "images") });
+const multerPhotos = multer({ dest: path.join(__dirname, "photos") });
 
 const pool = mysql.createPool(config.mysqlConfig);
 const DAOU = new libDAOUser.DAOUsers(pool);
-const DAOQ = new libDAOQuestions.DAOQuestions(pool);
 
 app.listen(config.port, function(err) {
     if (err) {
@@ -72,7 +71,17 @@ function middlewareCheckUser(request, response, next) {
     else {
         response.redirect("login");
     }
-};
+}
+
+
+function middleMessage(request, response, next) {
+    if(request.session.msg != undefined) {
+        response.locals.errMsg = request.session.msg;
+        request.session.msg = undefined;
+    }
+    
+    next();
+}
 
 app.get("/", function(request, response) {
     response.redirect("/login");
@@ -158,7 +167,7 @@ app.get("/friends", middlewareCheckUser, function (request, response) {
     });
 });
 
-app.post("/createUser", multerFactory.single("picture"), function (request, response) {
+app.post("/createUser", multerImages.single("picture"), function (request, response) {
     let user = {
         email: request.body.mail,
         name: request.body.name,
@@ -167,9 +176,6 @@ app.post("/createUser", multerFactory.single("picture"), function (request, resp
         birthday: request.body.birthday,
         picture: request.file != undefined ? request.file.filename : undefined
     }
-
-    console.log(user.picture)
-    console.log(`${request.file.path}`)
 
     DAOU.getUser(user.email, function(err, result) {
         if(err) {
@@ -192,35 +198,40 @@ app.post("/createUser", multerFactory.single("picture"), function (request, resp
     });
 });
 
-app.get("/profile", middlewareCheckUser, function (request, response) {
+app.get("/profile", middlewareCheckUser, middleMessage, function (request, response) {
 
     DAOU.getUser(response.locals.userEmail, function(err, user) {
         if(err) {
             console.log(err);   
         } 
         else {
-            if(user.birthday) 
-                user["age"] = utils.calculateAge(user.birthday, new Date());
-            else
-                user["age"] = "?"
-
-            switch (user.gender) {
-                case 'M':
-                    user.gender = 'Male';
-                    break;
-            
-                case 'F':
-                    user.gender = 'Female';
-                    break;
-
-                default:
-                    user.gender = 'Other';
-                    break;
-            }
-
-            let owner = response.locals.userEmail == user.email ? true : false;
-
-            response.render("profile", {user, owner});
+            DAOU.getPhotos(response.locals.userEmail, function(err, photos) {
+                if(err) {
+                    console.log(err);
+                }
+                else {
+                    if(user.birthday) 
+                        user["age"] = utils.calculateAge(user.birthday, new Date());
+                    else
+                        user["age"] = "?"
+    
+                    switch (user.gender) {
+                        case 'M':
+                            user.gender = 'Male';
+                            break;
+                    
+                        case 'F':
+                            user.gender = 'Female';
+                            break;
+        
+                        default:
+                            user.gender = 'Other';
+                            break;
+                    }
+    
+                    response.render("profile", {user, owner: true, photos: photos});
+                }
+            });     
         }
     });
 });
@@ -233,26 +244,35 @@ app.get("/profile/:id", middlewareCheckUser, function (request, response) {
         }
         else {
             if(user != undefined) {
-                if(user.birthday) 
-                    user["age"] = utils.calculateAge(user.birthday, new Date());
-                else
-                    user["age"] = "?"
 
-                switch (user.gender) {
-                    case 'M':
-                        user.gender = 'Male';
-                        break;
-                
-                    case 'F':
-                        user.gender = 'Female';
-                        break;
+                DAOU.getPhotos(request.params.id, function(err, photos) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    else {
+                        if(user.birthday) 
+                            user["age"] = utils.calculateAge(user.birthday, new Date());
+                        else
+                            user["age"] = "?"
 
-                    default:
-                        user.gender = 'Other';
-                        break;
-                }
+                        switch (user.gender) {
+                            case 'M':
+                                user.gender = 'Male';
+                                break;
+                        
+                            case 'F':
+                                user.gender = 'Female';
+                                break;
 
-                response.render("profile", {user: user, owner: false});
+                            default:
+                                user.gender = 'Other';
+                                break;
+                        }
+
+                        response.render("profile", {user: user,
+                            owner: user.email == response.locals.userEmail ? true : false, photos: photos});
+                    }
+                });
             }
             else {
                 response.render("userNotFound");
@@ -273,34 +293,49 @@ app.post("/search", middlewareCheckUser, function(request, response) {
 });
 
 app.get("/questions", middlewareCheckUser, function (request, response) {
-    DAOQ.getQuestions(function(err, questions){
-        if(err) {
-            console.log(err);
-        }
-        else{
-            response.render("randomQuestions", {questions : questions});
-        }
-    });
-});
-
-app.get("/question/:id", middlewareCheckUser, function (request, response) {
-
-    response.render("question");
-});
-
-app.get("/createQuestion", middlewareCheckUser, function (request, response) {
-
-    response.render("createQuestion");
+    response.redirect("/profile")
 });
 
 app.get("/updateProfile", middlewareCheckUser, function (request, response) {
-
-    DAOU.getUser("usuario@ucm.es", function(err, user) {
+    DAOU.getUser(response.locals.userEmail, function(err, user) {
         if(err) {
             console.log(err);
         }
         else {
+            user.birthday = utils.formatDate(user.birthday);
             response.render("updateProfile", {user});
+        }
+    });
+});
+
+app.post("/updateUser", middlewareCheckUser, multerImages.single("picture"), function (request, response) {
+    DAOU.login(response.locals.userEmail, request.body.password, function(err, points) {
+        if(err) {
+            console.log(err);
+        }
+        else {
+            let user = {
+                email: response.locals.userEmail,
+                pass: request.body.newPassword != undefined ? request.body.newPassword : request.body.oldPassword,
+                name: request.body.name,
+                gender: request.body.gender,
+                birthday: request.body.birthday,
+                picture: request.file != undefined ? request.file.filename : undefined
+            }
+
+            if(points !== null){
+                DAOU.updateUser(user, function(err, user) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    else {
+                        response.redirect("/profile");
+                    }
+                });
+            }
+            else {
+                response.render("updateProfile", {user: user, errMsg : "The old password is incorrect."});
+            }
         }
     });
 });
@@ -353,6 +388,58 @@ app.post("/ignoreFriend", middlewareCheckUser, function(request, response) {
                 response.redirect("/friends");
             }
     });
+});
+
+app.post("/addPhoto", middlewareCheckUser, multerPhotos.single("photo"), function(request, response) {
+
+    if(response.locals.userPoints >= 100) {
+        if(request.file != undefined) {
+            let photo = {
+                name: request.file.filename,
+                userEmail: response.locals.userEmail,
+                description: request.body.description
+            }
+
+            DAOU.addPhoto(photo,
+                function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    else {
+                        let points = response.locals.userPoints - 100;
+
+                        DAOU.updatePoints(response.locals.userEmail, points,
+                            function(err) {
+                                if(err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    response.redirect("/profile")
+                                }
+                            });
+                    }
+            });
+        }
+        else {
+            request.session.msg = "Select a photo to upload.";
+            response.redirect("/profile");
+        }
+    }
+    else {
+        request.session.msg = "You don't have enough points.";
+
+        response.render("profile");
+    }
+
+});
+
+app.get("/getPhoto/:name", middlewareCheckUser, function(request, response) {
+    if(request.params.name == null){
+        response.sendFile(path.join(__dirname, 'public', 'img/smile.jpg'));
+    }
+    else{
+        response.sendFile(path.join(__dirname, 'photos', request.params.name));
+    }
 });
 
 app.get(middlewareNotFoundError);

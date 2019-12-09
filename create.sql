@@ -50,3 +50,11 @@ CREATE TABLE IF NOT EXISTS friendAnswer (
     CONSTRAINT FK_FRIENDQUESTION FOREIGN KEY (idQuestion) REFERENCES questions (id),
     CONSTRAINT FK_AFRIEND FOREIGN KEY (emailFriend) REFERENCES users (email)
 );
+
+CREATE TABLE IF NOT EXISTS photos (
+    id int(20) UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    name varchar(100) NOT NULL,
+    userEmail varchar(254) NOT NULL,
+    description varchar(400),
+    CONSTRAINT FK_PUSER FOREIGN KEY (userEmail) REFERENCES users (email)
+);

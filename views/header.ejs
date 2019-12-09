@@ -1,6 +1,5 @@
 <header>
     <% if(typeof userEmail !== 'undefined') { %>
-        <% console.log(userEmail) %>
         <div class="headerleft">
             <div class="title">FaceBluff</div>
             <div class="links"><a href="/friends">Friends</a></div>
@@ -17,13 +16,11 @@
             </div>
         </div>
     <% } else { %>
-        <header>
-                <div class="title">FaceBluff</div>
-                <div class="user">
-                    <div class="account"><img src="img/login.png" alt="login" class="accimg"><a href="/login">Log in</a></div>
-                    <div class="account"><img src="img/signin.png" alt="signin" class="accimg"><a href="/signin">Sign in</a></div>
-                </div>
-            </header>
+        <div class="title">FaceBluff</div>
+        <div class="user">
+            <div class="account"><img src="img/login.png" alt="login" class="accimg"><a href="/login">Log in</a></div>
+            <div class="account"><img src="img/signin.png" alt="signin" class="accimg"><a href="/signin">Sign in</a></div>
+        </div>
     <% } %>
 
 </header>

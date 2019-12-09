@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ES-ES">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/style.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+    <title>Update your profile</title>
+</head>
+<body>
+    <%- include("header") %>
+
+    <main>
+        <h1>Nuevo usuario</h1>
+        <div class="container">
+            <form action="/updateUser" method="POST" class="form" enctype="multipart/form-data">
+                <div class="formElem">Mail <input type="text" name="mail" class="input" value="<%= user.email %>" readonly></div>
+                <div class="formElem">New Password <input type="password" name="newPassword" class="input"></div>
+                <div class="formElem">Name <input type="text" name="name" class="input" value="<%= user.name %>"></div>
+                <div class="formElem">Gender 
+                    <input type="radio" name="gender" class="radius" value="M"
+                        <% if(user.gender == "M") %> checked
+                    > Male
+                    <input type="radio" name="gender" class="radius" value="F"
+                        <% if(user.gender == "F") %> checked  
+                    > Female
+                    <input type="radio" name="gender" class="radius" value="O"
+                        <% if(user.gender == "O") %> checked
+                    > Other
+                </div>
+                <div class="formElem">Birthday <input type="date" name="birthday" class="input" value="<%= user.birthday %>"></div>
+                <div class="formElem">Profile picture <input type="file" name="picture" class="input"></div>
+                
+                <div class="formElem">Password <input type="password" name="password" class="input"></div>
+                
+                <input class="button" type="submit" value="Sign In">
+            </form>
+            <% if(typeof errMsg !== 'undefined'){ %>
+                <p class="error"><%=errMsg%></p>
+            <% } %>
+        </div>
+    </main>
+</body>
+</html>

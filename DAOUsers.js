@@ -272,6 +272,30 @@ class DAOUsers {
         });
     }
 
+    updateUser(user, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    'UPDATE users SET pass = ?, name = ?, birthday = ?, gender = ?, picture = ? WHERE email = ?;',
+                    [user.pass, user.name, user.birthday, user.gender, user.picture, user.email],
+                    function(err){
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null);
+                        }
+
+                        connection.release();
+                    }
+                )
+            }
+        });
+    }
+
     friendRequest(user, friend, callback) {
         this.pool.getConnection(function(err, connection){
             if(err){
@@ -279,7 +303,7 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    'INSERT INTO friends (emailUser1, emailUser2) VALUES (?, ?)', [user, friend],
+                    'INSERT INTO friends (emailUser1, emailUser2) VALUES (?, ?);', [user, friend],
                     function(err){
                         if(err) {
                             callback(new Error("Error de acceso a la base de datos"));
@@ -362,6 +386,90 @@ class DAOUsers {
                         }
                         else {
                             callback(null);
+                        }
+
+                        connection.release();
+                    }
+                )
+            }
+        });
+    }
+
+    addPhoto(photo, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    'INSERT INTO photos (name, userEmail, description) VALUES (?, ?, ?)', 
+                    [photo.name, photo.userEmail, photo.description],
+                    function(err){
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos " + err));
+                        }
+                        else {
+                            callback(null);
+                        }
+
+                        connection.release();
+                    }
+                )
+            }
+        });
+    }
+
+    updatePoints(email, points, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    'UPDATE users SET points = ? WHERE email = ?', 
+                    [points, email],
+                    function(err){
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos " + err));
+                        }
+                        else {
+                            callback(null);
+                        }
+
+                        connection.release();
+                    }
+                )
+            }
+        });
+    }
+
+    getPhotos(email, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    'SELECT name, description FROM photos WHERE userEmail = ?', 
+                    [email],
+                    function(err, result){
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos " + err));
+                        }
+                        else {
+                            let photos = [];
+                            let p;
+
+                            for(let photo of result) {
+                                p = {
+                                    name: photo.name,
+                                    description: photo.description
+                                }
+
+                                photos.push(p);
+                            }
+
+                            callback(null, photos);
                         }
 
                         connection.release();
