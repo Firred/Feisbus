@@ -335,12 +335,12 @@ app.get("/question/:id", middlewareCheckUser, function (request, response) {
             console.log(err);
         }
         else{
-            DAOQ.userAnswer(response.locals.userEmail, question.id, function (err, answer){
+            DAOQ.userAnswer(response.locals.userEmail, request.params.id, function (err, answer){
                 if(err){
                     console.log(err);
                 }
                 else{
-                    DAOQ.friendAnswers(response.locals.userEmail, question.id, function (err, friendsAnswers){
+                    DAOQ.friendAnswers(response.locals.userEmail, request.params.id, function (err, friendsAnswers){
                         if(err){
                             console.log(err);
                         }
@@ -352,6 +352,10 @@ app.get("/question/:id", middlewareCheckUser, function (request, response) {
             })
         }
     });
+});
+
+app.get("/friendImg/:img", middlewareCheckUser, function (request, response) {
+    response.sendFile(path.join(__dirname, 'images', request.params.img));
 });
 
 app.get("/updateProfile", middlewareCheckUser, function (request, response) {
