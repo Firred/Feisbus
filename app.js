@@ -145,7 +145,7 @@ app.get("/userImage/:email", function(request, response) {
                 response.sendFile(path.join(__dirname, 'public', 'img/smile.jpg'));
             }
             else{
-                response.sendFile(path.join(__dirname, 'profile_imgs' + img));
+                response.sendFile(path.join(__dirname, 'images/' + img));
             }
         }
     });
