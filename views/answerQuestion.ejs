@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ES-ES">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/css/style.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+        <title>Answer</title>
+    </head>
+<body>
+    <%- include("header") %>
+
+    <main>
+        <h1><%= question.text %></h1>
+        <div>
+            <form action="answer">
+                <% answers.forEach(answer => { %>
+                    <div class="question">
+                        <input name="<%=answer.id%>" type="radio">
+                        <%=answer.text%>
+                    </div>
+                    <a href="/answer/<%=answer.id%>" class="question"><%=answer.text%></a>
+                <% }); %>
+
+                <div class="question selectedquestion">
+                    <input name="question" type="radio" checked>
+                    Other
+                    <input name="otherText" type="text">
+                </div>
+                <div class="request">
+                    <a href="#" class="button">Answer</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
