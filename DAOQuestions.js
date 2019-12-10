@@ -111,12 +111,16 @@ class DAOQuestions {
                             callback(new Error("Error de acceso a la base de datos") + err);
                         }
                         else {
-                            let question = {
-                                id : result.id,
-                                text : result.text
+                            if(result.length > 0){
+                                let question = {
+                                    id : result[0].id,
+                                    text : result[0].text
+                                }
+                                callback(null, question);
                             }
-
-                            callback(null, question);
+                            else{
+                                callback(null, null);
+                            }
                         }
                         connection.release();
                     }
@@ -139,7 +143,12 @@ class DAOQuestions {
                             callback(new Error("Error de acceso a la base de datos") + err);
                         }
                         else {
-                            callback(null, result);
+                            if(result.length > 0){
+                                callback(null, result[0]);
+                            }
+                            else{
+                                callback(null, null);
+                            }
                         }
                         connection.release();
                     }
