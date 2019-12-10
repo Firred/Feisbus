@@ -20,12 +20,21 @@
                             <img class="requestpic" src="/userImage/<%=user.email%>" />
                             <div class="friendname"><a href="/profile/<%=user.email%>"><%= user.name %></a></div>
                         </div>
-                        <div class="requestright">
-                            <form action="requestFriend" method="POST">
-                                <input type="hidden" name="user" value="<%= user.email %>">
-                                <input type="submit" value="Request friendship">
-                            </form>
-                        </div>
+
+                        <% if(user.email != userEmail) { %>
+                            <% if(!user.friend) { %>
+                                <div class="requestright">
+                                    <form action="requestFriend" method="POST">
+                                        <input type="hidden" name="user" value="<%= user.email %>">
+                                        <input type="submit" value="Request friendship">
+                                    </form>
+                                </div>
+                            <% } else { %>
+                                <div class="requestright">
+                                    <div class="requestFriend"> Friend </div>
+                                </div>
+                            <% } %>   
+                        <% } %>
                     </div>
                 <% }); %>
             </div>

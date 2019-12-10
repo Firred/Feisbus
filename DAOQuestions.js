@@ -136,7 +136,7 @@ class DAOQuestions {
             }
             else{
                 connection.query(
-                    "SELECT text FROM useranswer WHERE emailUser = ? AND idQuestion = ?",
+                    "SELECT text FROM userAnswer WHERE emailUser = ? AND idQuestion = ?",
                     [userEmail, questionId],
                     function(err, result) {
                         if(err) {
@@ -164,8 +164,8 @@ class DAOQuestions {
             }
             else{
                 connection.query(
-                    "SELECT name, picture, correct FROM friendanswer LEFT JOIN users " + 
-                    "ON friendanswer.emailFriend = users.email WHERE emailUser = ? AND idQuestion = ?",
+                    "SELECT name, picture, correct FROM friendAnswer LEFT JOIN users " + 
+                    "ON friendAnswer.emailFriend = users.email WHERE emailUser = ? AND idQuestion = ?",
                     [userEmail, questionId],
                     function(err, result) {
                         if(err) {

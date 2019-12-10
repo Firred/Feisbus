@@ -284,7 +284,7 @@ app.get("/profile/:id", middlewareCheckUser, function (request, response) {
 });
 
 app.post("/search", middlewareCheckUser, function(request, response) {
-    DAOU.searchUser(request.body.search, function(err, users){
+    DAOU.searchUser(response.locals.userEmail, request.body.search, function(err, users){
         if(err) {
             console.log(err);
         }

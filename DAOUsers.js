@@ -235,15 +235,19 @@ class DAOUsers {
         });
     }
 
-    searchUser (name, callback) {
+    searchUser (email, name, callback) {
         this.pool.getConnection(function(err, connection){
             if(err){
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else{
-                let sql = 'SELECT email, name FROM users WHERE name LIKE ?;'
-                connection.query(
-                    sql, ["%"+name+"%"],
+                let sql =  "SELECT email, name, accepted  FROM users " +
+                            "left join friends ON ((emailUser1 = ? AND emailUser2 = email) " +
+                            "OR (emailUser2 = ? AND emailUser1 = emaiL)) AND accepted = 1 " +
+                            "WHERE name LIKE ?;";
+                            
+                    connection.query(
+                    sql, [email, email, "%"+name+"%"],
                     function(err, result){
                         connection.release()
                         if(err){
@@ -257,9 +261,10 @@ class DAOUsers {
                                 for(let row of result) {
                                     u = {
                                         email: row.email,
-                                        name: row.name
+                                        name: row.name,
+                                        friend: row.accepted == null ? 0 : 1 
                                     }
-
+                                    
                                     users.push(u);
                                 }
                             }
