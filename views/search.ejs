@@ -17,7 +17,7 @@
                 <% users.forEach(user => { %>
                     <div class="request">
                         <div class="requestleft">
-                            <img class="requestpic" src="/userImage/<%=user.email%>" />
+                            <a href="/profile/<%=user.email%>"><img class="requestpic" src="/userImage/<%=user.email%>" /></a>
                             <div class="friendname"><a href="/profile/<%=user.email%>"><%= user.name %></a></div>
                         </div>
 
@@ -26,7 +26,7 @@
                                 <div class="requestright">
                                     <form action="requestFriend" method="POST">
                                         <input type="hidden" name="user" value="<%= user.email %>">
-                                        <input type="submit" value="Request friendship">
+                                        <input type="submit" value="Request friendship" class="button">
                                     </form>
                                 </div>
                             <% } else { %>
