@@ -49,8 +49,7 @@ function middlewareServerError (error, request, response, next) {
     response.status(500);
     
     response.render("error500", {
-        mensaje: error.message,
-        pila: error.stack
+        mensaje: error.message
     });
 };
 

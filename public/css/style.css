@@ -414,3 +414,9 @@ a.question:hover {
     color: wheat;
     cursor: pointer;
 }
+
+.errorImg{
+    width: 50%;
+    margin: auto; 
+    text-align: center;
+}
