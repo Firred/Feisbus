@@ -460,7 +460,7 @@ app.post("/guessAnswer/:id", middlewareCheckUser, function (request, response) {
         else{
             if(correctAnswer != null){
                 if(correctAnswer.text == answer){
-                    DAOQ.updateFriendAnswer(response.locals.userEmail, request.body.friendEmail, request.params.id, 1, function(err){
+                    DAOQ.setFriendAnswer(response.locals.userEmail, request.body.friendEmail, request.params.id, 1, function(err){
                         if(err){
                             console.log(err);
                         }
@@ -479,7 +479,7 @@ app.post("/guessAnswer/:id", middlewareCheckUser, function (request, response) {
                     });   
                 }
                 else{
-                    DAOQ.updateFriendAnswer(response.locals.userEmail, request.body.friendEmail, request.params.id, 0, function(err){
+                    DAOQ.setFriendAnswer(response.locals.userEmail, request.body.friendEmail, request.params.id, 0, function(err){
                         if(err){
                             console.log(err);
                         }

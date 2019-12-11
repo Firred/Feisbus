@@ -226,10 +226,10 @@ class DAOQuestions {
                     "FROM users " +
                     "LEFT JOIN friends ON (email = emailUser1 OR email = emailUser2) AND accepted = 1 " +
                     "LEFT JOIN users as f ON (f.email = emailUser1 OR f.email = emailUser2) AND f.email <> users.email " +
-                    "LEFT JOIN userAnswer ON f.email = emailUser " +
-                    "LEFT JOIN friendAnswer ON (friendAnswer.emailUser = f.email) " +
-                    "WHERE users.email = ? AND userAnswer.idQuestion = ?;",
-                    [userEmail, questionId],
+                    "LEFT JOIN userAnswer ON (f.email = emailUser AND idQuestion = ?) " +
+                    "LEFT JOIN friendAnswer ON (friendAnswer.emailFriend = f.email AND friendAnswer.emailUser = users.email AND friendAnswer.idQuestion = userAnswer.idQuestion) " +
+                    "WHERE users.email = ? AND userAnswer.idQuestion = ? AND userAnswer.emailUser IS NOT NULL;",
+                    [questionId, userEmail, questionId],
                     function(err, result) {
                         if(err) {
                             callback(new Error("Error de acceso a la base de datos") + err);
@@ -325,15 +325,15 @@ class DAOQuestions {
         });
     }
 
-    updateFriendAnswer(userEmail, friendEmail, questionId, correct, callback){
+    setFriendAnswer(userEmail, friendEmail, questionId, correct, callback){
         this.pool.getConnection(function(err, connection){
             if(err){
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else{
                 connection.query(
-                    "UPDATE friendAnswer SET correct = ? WHERE emailUser = ? AND emailFriend = ? AND idQuestion = ?",
-                    [correct, userEmail, friendEmail, questionId],
+                    "INSERT INTO friendAnswer (emailUser, idQuestion, emailFriend, correct) VALUES (?,?,?,?)",
+                    [userEmail, questionId, friendEmail, correct],
                     function(err, result) {
                         if(err) {
                             callback(new Error("Error de acceso a la base de datos") + err);
