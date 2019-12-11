@@ -534,10 +534,7 @@ app.post("/requestFriend", middlewareCheckUser, function(request, response) {
                 console.log(err);
             }
             else {
-                if(result) {
-                    response.redirect("/friends");
-                } 
-                else {
+                if(!result) {
                     DAOU.friendRequest(response.locals.userEmail, request.body.user,
                         function(err) {
                             if(err) {
@@ -548,7 +545,36 @@ app.post("/requestFriend", middlewareCheckUser, function(request, response) {
                             }
                         }
                     );
-                }     
+                } 
+                else {
+                    if(result.email1 == response.locals.userEmail) {
+                        response.redirect("/friends");
+                    }
+                    else if (result.accepted == -1) {
+                        DAOU.deleteFriendship(response.locals.userEmail, request.body.user,
+                            function(err) {
+                                if(err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    DAOU.friendRequest(response.locals.userEmail, request.body.user,
+                                        function(err) {
+                                            if(err) {
+                                                console.log(err);
+                                            }
+                                            else {
+                                                response.redirect("/friends");
+                                            }
+                                        }
+                                    );
+                                }
+                            }
+                        ); 
+                    }
+                    else {
+                        response.redirect("/friends");
+                    }
+                }    
             }
     });   
 });

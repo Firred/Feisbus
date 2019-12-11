@@ -366,15 +366,22 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "SELECT * FROM friends WHERE (emailUser1 = ? AND emailUser2 = ?) OR (emailUser2 = ? AND emailUser1 = ?);",
+                    "SELECT emailUser1, accepted FROM friends WHERE (emailUser1 = ? AND emailUser2 = ?) OR (emailUser2 = ? AND emailUser1 = ?);",
                     [user, friend, user, friend],
                     function(err, result){
                         if(err) {
                             callback(new Error("Error de acceso a la base de datos" + err));
                         }
                         else {
+                            let friendship;
+
                             if(result.length > 0) {
-                                callback(null, true);
+                                friendship = {
+                                    email1: result[0].emailUser1,
+                                    accepted: result[0].accepted
+                                }
+
+                                callback(null, friendship);
                             }
                             else {
                                 callback(null, false);
@@ -395,7 +402,7 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "DELETE FROM `friends` WHERE emailUser2 = ? AND emailUser1 = ?;",
+                    "UPDATE friends SET accepted = -1 WHERE emailUser2 = ? AND emailUser1 = ?;",
                     [user, friend],
                     function(err){
                         if(err) {
@@ -487,6 +494,30 @@ class DAOUsers {
                             }
 
                             callback(null, photos);
+                        }
+
+                        connection.release();
+                    }
+                )
+            }
+        });
+    }
+
+    deleteFriendship(user, friend, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    "DELETE FROM `friends` WHERE emailUser2 = ? AND emailUser1 = ?;",
+                    [user, friend],
+                    function(err){
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos" + err));
+                        }
+                        else {
+                            callback(null);
                         }
 
                         connection.release();

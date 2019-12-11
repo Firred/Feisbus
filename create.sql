@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS friends (
 	emailUser1 varchar(254) NOT NULL,
 	emailUser2 varchar(254) NOT NULL,
-    accepted tinyint(1) DEFAULT 0,
+    accepted int(1) DEFAULT 0,
     CONSTRAINT FK_FRIEND1 FOREIGN KEY (emailUser1) REFERENCES users (email),
     CONSTRAINT FK_FRIEND2 FOREIGN KEY (emailUser2) REFERENCES users (email)
 );
