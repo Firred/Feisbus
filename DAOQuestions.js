@@ -222,7 +222,7 @@ class DAOQuestions {
             }
             else{
                 connection.query(
-                    "SELECT name, picture, correct, emailFriend FROM friendAnswer LEFT JOIN users " + 
+                    "SELECT name, correct, emailFriend FROM friendAnswer LEFT JOIN users " + 
                     "ON friendAnswer.emailFriend = users.email WHERE emailUser = ? AND idQuestion = ?;",
                     [userEmail, questionId],
                     function(err, result) {
@@ -237,7 +237,6 @@ class DAOQuestions {
                                 for(let row of result){
                                     friend = {
                                         name : row.name,
-                                        img : row.picture,
                                         correct : row.correct,
                                         email : row.emailFriend
                                     }

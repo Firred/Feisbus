@@ -483,10 +483,6 @@ app.post("/guessAnswer/:id", middlewareCheckUser, function (request, response) {
     });
 });
 
-app.get("/friendImg/:img", middlewareCheckUser, function (request, response) {
-    response.sendFile(path.join(__dirname, 'images', request.params.img));
-});
-
 app.get("/updateProfile", middlewareCheckUser, function (request, response) {
     DAOU.getUser(response.locals.userEmail, function(err, user) {
         if(err) {
