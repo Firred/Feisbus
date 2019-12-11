@@ -420,3 +420,8 @@ a.question:hover {
     margin: auto; 
     text-align: center;
 }
+
+.textarea{
+    width: 60%;
+    resize: none;
+}
