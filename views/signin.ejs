@@ -13,12 +13,12 @@
         <h1>New User</h1>
         <div class="container">
             <form action="/createUser" method="POST" class="form" enctype="multipart/form-data">
-                <div class="formElem">Mail <input type="text" name="mail" class="input"></div>
-                <div class="formElem">Password <input type="password" name="password" class="input"></div>
-                <div class="formElem">Name <input type="text" name="name" class="input"></div>
+                <div class="formElem">Mail <input type="text" name="mail" class="input" required></div>
+                <div class="formElem">Password <input type="password" name="password" class="input" required></div>
+                <div class="formElem">Name <input type="text" name="name" class="input" required></div>
                 <div class="formElem">Gender 
                     <div class="input">
-                        <div class="radius"><input type="radio" name="gender" class="" value="M"> Male</div>
+                        <div class="radius"><input type="radio" name="gender" class="" value="M" required> Male</div>
                         <div class="radius"><input type="radio" name="gender" class="" value="F"> Female</div>
                         <div class="radius"><input type="radio" name="gender" class="" value="O"> Other</div>
                     </div>
