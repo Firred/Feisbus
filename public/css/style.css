@@ -189,6 +189,7 @@ h1{
     padding-right: 1em;
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 .requestleft div{
     margin-top: auto;
@@ -203,6 +204,12 @@ h1{
     margin-bottom: auto;
     padding-left: 1em;
     padding-right: 1em;
+    display: flex;
+    flex-direction: row;
+}
+
+.doubleButton{
+    margin-right: 1em;
 }
 
 .request a{
@@ -245,6 +252,13 @@ h1{
 .searchbutton{
     padding-right: 1em;
     padding-left: 1em;
+}
+
+.searchResults{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 2em;
 }
 
 .searchResults a{
@@ -343,8 +357,10 @@ h1{
     font-weight: bold;
 }
 
-.question:checked{
-    background-color: darkcyan;
+input[type=radio]:checked + label{
+    background: darkcyan;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 p{

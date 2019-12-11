@@ -16,7 +16,8 @@
             <form action="/guessAnswer/<%=question.id%>" class="form" method="POST">
                 <% answers.forEach(answer => { %>
                     <div class="guess">
-                        <input type="radio" name="question" value="<%=answer.text%>"><%=answer.text%>
+                        <input type="radio" name="question" value="<%=answer.text%>" id="<%=answer.text%>">
+                        <label for="<%=answer.text%>"><%=answer.text%></label>
                     </div>
                 <% }); %>
                 <input type="hidden" id="friendEmail" name="friendEmail" value="<%=friend.email%>">
