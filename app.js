@@ -302,23 +302,29 @@ app.get("/newQuestion", middlewareCheckUser, function (request, response) {
 });
 
 app.post("/createQuestion", middlewareCheckUser, function (request, response) {
+    let question = request.body.question.trim();
     let answers = request.body.answers.split('\n');
 
-    DAOQ.createQuestion(request.body.question, answers, function(err, questionId){
-        if(err){
-            console.log(err);
-        }
-        else{
-            DAOQ.createAnswers(questionId, answers, function (err){
-                if(err){
-                    console.log(err);
-                }
-                else{
-                    response.redirect("/question/" + questionId);
-                }
-            });
-        }
-    });
+    if(question != "" && answers[0] != ""){
+        DAOQ.createQuestion(request.body.question, answers, function(err, questionId){
+            if(err){
+                console.log(err);
+            }
+            else{
+                DAOQ.createAnswers(questionId, answers, function (err){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        response.redirect("/question/" + questionId);
+                    }
+                });
+            }
+        });
+    }
+    else{
+        response.redirect("/newQuestion");
+    }
 });
 
 app.get("/question/:id", middlewareCheckUser, function (request, response) {
@@ -376,24 +382,29 @@ app.post("/userAnswer/:id", middlewareCheckUser, function (request, response) {
         });
     }
     else{
-        let answers = [];
-        answers.push(request.body.newAnswer);
-        
-        DAOQ.createAnswers(request.params.id, answers, function (err){
-            if(err){
-                console.log(err);
-            }
-            else{
-                DAOQ.setUserAnswer(response.locals.userEmail, request.params.id, request.body.newAnswer, function(err){
-                    if(err){
-                        console.log(err);
-                    }
-                    else{
-                        response.redirect("/question/" + request.params.id);
-                    }
-                });
-            }
-        });
+        if(request.body.newAnswer != ""){
+            let answers = [];
+            answers.push(request.body.newAnswer);
+            
+            DAOQ.createAnswers(request.params.id, answers, function (err){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    DAOQ.setUserAnswer(response.locals.userEmail, request.params.id, request.body.newAnswer, function(err){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            response.redirect("/question/" + request.params.id);
+                        }
+                    });
+                }
+            });
+        }
+        else{
+            response.redirect("/answerQuestion/" + request.params.id);
+        }
     }
 });
 
