@@ -185,6 +185,8 @@ app.post("/createUser", multerImages.single("picture"), function (request, respo
                 }
         
                 request.session.currentUser = request.body.mail;
+                request.session.userPoints = 0;
+
                 response.redirect("/profile");
             });
         }
@@ -229,16 +231,16 @@ app.get("/profile", middlewareCheckUser, middleMessage, function (request, respo
     });
 });
 
-app.get("/profile/:id", middlewareCheckUser, function (request, response) {
+app.get("/profile/:email", middlewareCheckUser, function (request, response) {
 
-    DAOU.getUser(request.params.id, function(err, user) {
+    DAOU.getUser(request.params.email, function(err, user) {
         if(err) {
             console.log(err);   
         }
         else {
             if(user != undefined) {
 
-                DAOU.getPhotos(request.params.id, function(err, photos) {
+                DAOU.getPhotos(request.params.email, function(err, photos) {
                     if(err) {
                         console.log(err);
                     }
