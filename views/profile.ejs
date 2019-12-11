@@ -21,31 +21,38 @@
                         <div> <%= user.points %> points </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="photos">
-                    <% photos.forEach(photo => { %>
-                        <div class="photo">
-                            <img src="/getPhoto/<%= photo.name %>">
-                            <%= photo.description %>
-                        </div>
-                    <% }); %>
+            <% if(owner) { %>
+                <div class="request">
+                    <a href="/updateProfile" class="button">Update profile</a>
                 </div>
-
-                <% if(owner) { %>
-                    <div class="profilebutton"><a href="/updateProfile" class="button">Update profile</a></div>
-                    
+                
+                <div class="emptycontainer">
                     <form action="/addPhoto" method="POST" enctype="multipart/form-data">
-                        <div class="formElem">
-                            <input class="button" type="submit" value="Add Photo">
-                            <input type="file" name="photo" class="input">
-                            <input type="text" name="description" class="input">
+                        <div class="upload">
+                            <div class="formElem"><input type="file" name="photo" class="input"></div>
+                            <div class="formElem"><input type="text" name="description" placeholder="Description" class="input"></div>
+                            <div class="formElem"><input class="button" type="submit" value="Upload Photo"></div>
                         </div>            
                     </form>
+                </div>
 
-                    <% if(typeof errMsg !== 'undefined'){ %>
-                        <p class="error"><%=errMsg%></p>
-                    <% } %> 
-                <% } %>
+                <% if(typeof errMsg !== 'undefined'){ %>
+                    <p class="error"><%=errMsg%></p>
+                <% } %> 
+            <% } %>
+            
+            <div class="emptycontainer">
+                <h1>Posted Pictures</h1>
+                <% photos.forEach(photo => { %>
+                    <div class="photoContainer">
+                        <p class="photoDescription"><%= photo.description %></p>
+                        <div class="postImg">
+                            <img class="photo" src="/getPhoto/<%= photo.name %>">
+                        </div>   
+                    </div>            
+                <% }); %>
             </div>
         </main>
     </body>

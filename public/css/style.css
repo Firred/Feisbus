@@ -75,13 +75,28 @@ h1{
 
 .container{
     margin: auto;
-    display: flex;
-    margin-top: 5%;
+    display: block;
+    margin-top: 2em;
     background-color: #4AE342;
     width: 50%;
     padding-top: 2%;
     padding-bottom: 2%;
     border-radius: 1em;
+    font-weight: bold;
+}
+
+.subContainer{
+    display: flex;
+}
+
+.signMessage{
+    text-align: center;
+    color: white;
+}
+
+.signUp{
+    font-weight: bold;
+    color: black;
 }
 
 .form{
@@ -107,7 +122,8 @@ h1{
 }
 
 .radius{
-    justify-content: space-between;
+    display: inline;
+    margin-right: 1em;
 }
 
 .button{
@@ -115,7 +131,7 @@ h1{
     color: #4AE342;
     font-size: 1.5em;
     font-weight: bold;;
-    width: 25%;
+    width: auto;
     padding: .25em;
     margin: auto;
     margin-top: .8em;
@@ -135,8 +151,11 @@ h1{
 }
 
 .profilepic{
+    width: 25%;
     margin-left: 5%;
     margin-right: 3%;
+    border: #44D63D solid 0.3em;
+    border-radius: 0.5em;
 }
 
 .requestpic{
@@ -203,21 +222,33 @@ h1{
     padding-left: 1em;
     padding-right: 1em;
     font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.searchform{
-    margin-top: auto;
-    margin-bottom: auto;
-    width: 55%;
+.searchText{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
 }
 
 .searchinput{
-    width: 100%;
+    margin-left: 1em;
+    margin-right: 1em;
+    width: 80%;
+    height: 2em;
 }
 
 .searchbutton{
     padding-right: 1em;
     padding-left: 1em;
+}
+
+.searchResults a{
+    color: black;
 }
 
 .userpic{
@@ -245,6 +276,44 @@ h1{
     margin-bottom: 1em;
 }
 
+.error{
+    text-align: center;
+    font-weight: bolder;
+    color: darkred;
+}
+
+.postImg{
+    margin: auto;
+}
+
+.photo{
+    width: 100%;
+    border-radius: 0.5em;
+}
+
+.photoContainer{
+    background-color: #4AE342;
+    border-radius: 0.5em;
+    margin-bottom: 1em;
+    padding-right: 1em;
+    padding-left: 1em;
+    padding-bottom: 1em;
+}
+
+.photoDescription{
+    font-size: 1.5em;
+    font-weight: bold;
+    padding-left: 0.5em;
+    background-color: whitesmoke;
+    border-radius: 0.1em;
+}
+
+.upload{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+
 .points{
     display: flex;
     flex-direction: column;
@@ -260,6 +329,7 @@ h1{
     padding-left: 1em;
     margin-bottom: .5em;
     font-weight: bold;
+    border-radius: 0.2em;
 }
 
 .guess{
@@ -273,7 +343,7 @@ h1{
     font-weight: bold;
 }
 
-:checked + .selectedquestion{
+.question:checked{
     background-color: darkcyan;
 }
 
@@ -326,4 +396,5 @@ a.question:hover {
 
 .button:hover{
     color: wheat;
+    cursor: pointer;
 }

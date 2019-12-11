@@ -14,14 +14,14 @@
         <div>
             <form action="/userAnswer/<%=question.id%>" class="form" method="POST">
                 <% answers.forEach(answer => { %>
-                    <div class="question selectedquestion">
+                    <div class="question">
                         <input type="radio" name="ans" value="<%=answer.text%>"><%=answer.text%>
                     </div>
                 <% }); %>
 
                 <div class="question">
                     <label>
-                        <input type="radio" name="ans" value="new" checked class="selectedquestion">
+                        <input type="radio" name="ans" value="new" checked>
                         Other: <input type="text" name="newAnswer">
                     </label>
                 </div>

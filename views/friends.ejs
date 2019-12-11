@@ -36,16 +36,12 @@
 
             <h1>Search Friends</h1>
             <div class="emptycontainer">
-                <div class="request">
-                    <div class="search">Search by name:</div>
-
-                    <form action="search" method="POST" class="searchform">
-                        <input type="text" name="search" class="searchinput">       
-                        
-                        <input type="submit" value="Search" class="button"> 
-                    </form>
-                        
-                </div>
+                <form action="search" method="POST" class="search">
+                    <div class="searchText"><label>Search by name:</label>
+                        <input type="text" name="search" class="searchinput">
+                    </div>           
+                    <div><input type="submit" value="Search" class="button"></div>
+                </form>
             </div>
 
             <h1>My Friends</h1>

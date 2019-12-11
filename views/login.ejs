@@ -7,26 +7,23 @@
         <title>Log in</title>
     </head>
     <body>
-        <header>
-            <div class="title">FaceBluff</div>
-            <div class="user">
-                <div class="account"><img src="img/login.png" alt="login" class="accimg"><a href="/login">Log in</a></div>
-                <div class="account"><img src="img/signin.png" alt="signin" class="accimg"><a href="/signin">Sign in</a></div>
-            </div>
-        </header>
+        <%- include("header") %>
         
         <main>
-            <h1>Log in</h1>
+            <h1>My Account</h1>
             <div class="container">
-                <form action="/login" class="form" method="POST">
-                    <div class="formElem">Email <input class="input" type="text" name="mail" value="" placeholder="name@service.somthing"></div>
-                    <div class="formElem">Password <input class="input" type="password" name="password" placeholder="********"></div>
-                    <input class="button" type="submit" value="Log in">
-                </form>
+                <div class="subContainer">
+                    <form action="/login" class="form" method="POST">
+                        <div class="formElem">Email <input class="input" type="text" name="mail" value="" placeholder="user@domain.ext"></div>
+                        <div class="formElem">Password <input class="input" type="password" name="password"></div>
+                        <input class="button" type="submit" value="Log in">
+                    </form>
 
-                <% if(typeof errMsg !== 'undefined'){ %>
-                    <p class="error"><%=errMsg%></p>
-                <% } %>
+                    <% if(typeof errMsg !== 'undefined'){ %>
+                        <p class="error"><%=errMsg%></p>
+                    <% } %>
+                </div>
+                <p class="signMessage">Don't have an account? <a href="/signin" class="signUp">Sign up</a></p>
             </div>
         </main>
         <footer>
