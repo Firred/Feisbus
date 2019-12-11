@@ -273,7 +273,7 @@ h1{
     font-weight: bold;
 }
 
-.selectedquestion{
+:checked + .selectedquestion{
     background-color: darkcyan;
 }
 

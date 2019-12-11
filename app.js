@@ -29,15 +29,6 @@ const pool = mysql.createPool(config.mysqlConfig);
 const DAOU = new libDAOUser.DAOUsers(pool);
 const DAOQ = new libDAOQuestions.DAOQuestions(pool);
 
-app.listen(config.port, function(err) {
-    if (err) {
-        console.error("No se pudo inicializar el servidor: "
-            + err.message);
-    } else {
-        console.log(`Servidor arrancado en el puerto ${config.port}`);
-    }
-});
-
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -135,7 +126,7 @@ app.get("/userImage", middlewareCheckUser, function(request, response) {
     });
 });
 
-app.get("/userImage/:email", function(request, response) {
+app.get("/userImage/:email", middlewareCheckUser, function(request, response) {
     DAOU.getUserImageName(request.params.email, function(err, img){
         if(err){
             console.log(err);
@@ -310,13 +301,13 @@ app.get("/newQuestion", middlewareCheckUser, function (request, response) {
 });
 
 app.post("/createQuestion", middlewareCheckUser, function (request, response) {
-    DAOQ.createQuestion(request.body.question, function(err, questionId){
+    let answers = request.body.answers.split('\n');
+
+    DAOQ.createQuestion(request.body.question, answers, function(err, questionId){
         if(err){
             console.log(err);
         }
         else{
-            let answers = request.body.answers.split('\n');
-
             DAOQ.createAnswers(questionId, answers, function (err){
                 if(err){
                     console.log(err);
@@ -335,7 +326,7 @@ app.get("/question/:id", middlewareCheckUser, function (request, response) {
             console.log(err);
         }
         else{
-            DAOQ.userAnswer(response.locals.userEmail, request.params.id, function (err, answer){
+            DAOQ.getUserAnswer(response.locals.userEmail, request.params.id, function (err, answer){
                 if(err){
                     console.log(err);
                 }
@@ -350,6 +341,153 @@ app.get("/question/:id", middlewareCheckUser, function (request, response) {
                     }) 
                 }
             })
+        }
+    });
+});
+
+app.get("/answerQuestion/:id", middlewareCheckUser, function (request, response) {
+    DAOQ.getSingleQuestion(request.params.id, function(err, question){
+        if(err){
+            console.log(err);
+        }
+        else{
+            DAOQ.getAnswers(question.id, function(err, answers){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    response.render("answerQuestion", {question, answers});
+                }
+            });
+        }
+    });
+});
+
+app.post("/userAnswer/:id", middlewareCheckUser, function (request, response) {
+    if(request.body.ans != "new"){
+        DAOQ.setUserAnswer(response.locals.userEmail, request.params.id, request.body.ans, function(err){
+            if(err){
+                console.log(err);
+            }
+            else{
+                response.redirect("/question/" + request.params.id);
+            }
+        });
+    }
+    else{
+        let answers = [];
+        answers.push(request.body.newAnswer);
+        
+        DAOQ.createAnswers(request.params.id, answers, function (err){
+            if(err){
+                console.log(err);
+            }
+            else{
+                DAOQ.setUserAnswer(response.locals.userEmail, request.params.id, request.body.newAnswer, function(err){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        response.redirect("/question/" + request.params.id);
+                    }
+                });
+            }
+        });
+    }
+});
+
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
+app.post("/guess", middlewareCheckUser, function (request, response) {
+    let friendEmail = request.body.friendEmail;
+    let questionId = request.body.questionId;
+
+    DAOQ.getSingleQuestion(questionId, function(err, question){
+        if(err){
+            console.log(err);
+        }
+        else{
+            DAOU.getUser(friendEmail, function(err, friend){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    DAOQ.getCorrectGuessAnswer(questionId, friendEmail, function(err, correctAnswer){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            DAOQ.getGuessAnswers(questionId, correctAnswer, function(err, answers){
+                                if(err){
+                                    console.log(err);
+                                }
+                                else{
+                                    let correct = {
+                                        text : correctAnswer.text
+                                    }
+                                    answers.push(correct);
+                                    shuffle(answers);
+                                    
+                                    response.render("guessQuestion", {question, friend, answers});
+                                }
+                            });  
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+
+app.post("/guessAnswer/:id", middlewareCheckUser, function (request, response) {
+    let answer = request.body.question;
+    let points = response.locals.userPoints + 50;
+
+    DAOQ.getCorrectGuessAnswer(request.params.id, request.body.friendEmail, function(err, correctAnswer){
+        if(err){
+            console.log(err);
+        }
+        else{
+            if(correctAnswer != null){
+                if(correctAnswer.text == answer){
+                    DAOQ.updateFriendAnswer(response.locals.userEmail, request.body.friendEmail, request.params.id, 1, function(err){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            DAOU.updatePoints(response.locals.userEmail, points,
+                                function(err) {
+                                    if(err) {
+                                        console.log(err);
+                                    }
+                                    else {
+                                        request.session.userPoints = points;
+                                        response.redirect("/question/" + request.params.id);
+                                    }
+                            });
+                        }
+                    });   
+                }
+                else{
+                    DAOQ.updateFriendAnswer(response.locals.userEmail, request.body.friendEmail, request.params.id, 0, function(err){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            response.redirect("/question/" + request.params.id);
+                        }
+                    });
+                }
+            }
         }
     });
 });
@@ -479,7 +617,7 @@ app.post("/addPhoto", middlewareCheckUser, multerPhotos.single("photo"), functio
                                     request.session.userPoints = points;
                                     response.redirect("/profile")
                                 }
-                            });
+                        });
                     }
             });
         }
@@ -505,5 +643,14 @@ app.get("/getPhoto/:name", middlewareCheckUser, function(request, response) {
     }
 });
 
-app.get(middlewareNotFoundError);
+app.use(middlewareNotFoundError);
 app.use(middlewareServerError);
+
+app.listen(config.port, function(err) {
+    if (err) {
+        console.error("No se pudo inicializar el servidor: "
+            + err.message);
+    } else {
+        console.log(`Servidor arrancado en el puerto ${config.port}`);
+    }
+});

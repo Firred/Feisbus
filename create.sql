@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS friends (
 
 CREATE TABLE IF NOT EXISTS questions (
 	id int(9) UNSIGNED PRIMARY KEY NOT NULL auto_increment,
-    text varchar(100) NOT NULL
+    text varchar(100) NOT NULL,
+	answers int(9) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS answers (
@@ -59,8 +60,26 @@ CREATE TABLE IF NOT EXISTS photos (
     CONSTRAINT FK_PUSER FOREIGN KEY (userEmail) REFERENCES users (email)
 );
 
-INSERT INTO `questions` (`id`, `text`) VALUES (NULL, '¿Cuál es la peor película de la historia?');
-INSERT INTO `questions` (`id`, `text`) VALUES (NULL, '¿En qué escuela primaria estudiaste?');
-INSERT INTO `questions` (`id`, `text`) VALUES (NULL, '¿Nintendo switch, PS4 o XBOX ONE?');
-INSERT INTO `questions` (`id`, `text`) VALUES (NULL, '¿Cuál es tu plato favorito?');
-INSERT INTO `questions` (`id`, `text`) VALUES (NULL, '¿Cuál es el personaje más irritante de Juego de Tronos?');
+INSERT INTO `questions` (`id`, `text`, `answers`) VALUES (NULL, '¿Cuál es la peor película de la historia?', 3);
+INSERT INTO `questions` (`id`, `text`, `answers`) VALUES (NULL, '¿En qué escuela primaria estudiaste?', 4);
+INSERT INTO `questions` (`id`, `text`, `answers`) VALUES (NULL, '¿Nintendo switch, PS4 o XBOX ONE?', 3);
+INSERT INTO `questions` (`id`, `text`, `answers`) VALUES (NULL, '¿Cuál es tu plato favorito?', 3);
+INSERT INTO `questions` (`id`, `text`, `answers`) VALUES (NULL, '¿Cuál es el personaje más irritante de Juego de Tronos?', 4);
+
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('1', 'Los locos adams');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('1', 'Star wars IX');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('1', 'Scary Movie');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('2', 'La de aquí');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('2', 'La de allá');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('2', 'Aquella');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('2', 'Esta');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('3', 'Nintendo Switch');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('3', 'PS4');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('3', 'XBOX ONE');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('4', 'Vieiras en escabeche');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('4', 'Lasgna');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('4', 'Pizza');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('5', 'Cersei Lannister');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('5', 'Joffrey Baratheon *cough* Lannister *cough*');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('5', 'Sansa Stark');
+INSERT INTO `answers` (`idQuestion`, `text`) VALUES ('5', 'El Gorrión Supremo');

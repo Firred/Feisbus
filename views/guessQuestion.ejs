@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ES-ES">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/css/style.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+        <title>Guess</title>
+    </head>
+<body>
+    <%- include("header") %>
+
+    <main>
+        <h1> <%= question.text %></h1>
+        <div class="emptycontainer">
+            <p>What do you think <%=friend.name%> answered?</p>
+            <form action="/guessAnswer/<%=question.id%>" class="form" method="POST">
+                <% answers.forEach(answer => { %>
+                    <div class="guess">
+                        <input type="radio" name="question" value="<%=answer.text%>"><%=answer.text%>
+                    </div>
+                <% }); %>
+                <input type="hidden" id="friendEmail" name="friendEmail" value="<%=friend.email%>">
+                <div class="request">
+                    <input class="button" type="submit" value="Answer">
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

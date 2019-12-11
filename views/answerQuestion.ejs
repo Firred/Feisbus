@@ -12,22 +12,21 @@
     <main>
         <h1><%= question.text %></h1>
         <div>
-            <form action="answer">
+            <form action="/userAnswer/<%=question.id%>" class="form" method="POST">
                 <% answers.forEach(answer => { %>
-                    <div class="question">
-                        <input name="<%=answer.id%>" type="radio">
-                        <%=answer.text%>
+                    <div class="question selectedquestion">
+                        <input type="radio" name="ans" value="<%=answer.text%>"><%=answer.text%>
                     </div>
-                    <a href="/answer/<%=answer.id%>" class="question"><%=answer.text%></a>
                 <% }); %>
 
-                <div class="question selectedquestion">
-                    <input name="question" type="radio" checked>
-                    Other
-                    <input name="otherText" type="text">
+                <div class="question">
+                    <label>
+                        <input type="radio" name="ans" value="new" checked class="selectedquestion">
+                        Other: <input type="text" name="newAnswer">
+                    </label>
                 </div>
                 <div class="request">
-                    <a href="#" class="button">Answer</a>
+                    <input class="button" type="submit" value="Answer">
                 </div>
             </form>
         </div>

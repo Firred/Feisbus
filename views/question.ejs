@@ -17,7 +17,7 @@
             <% } else { %>
                 <p>You didn't answer this question yet.</p>
                 <div class="answerbutton"> 
-                    <a href="#" class="button secondarybutton">Answer this question</a> 
+                    <a href="/answerQuestion/<%=question.id%>" class="button secondarybutton">Answer this question</a> 
                 </div>
             <% } %>
 
@@ -32,7 +32,13 @@
 
                     <div class="requestright">
                         <% if(fanswer.correct == null) { %>
-                            <a href="#" class="button">Guess</a>
+                            <form action="/guess" method="post">
+                                <input type="hidden" id="friendEmail" name="friendEmail" value="<%=fanswer.email%>">
+                                <input type="hidden" id="questionId" name="questionId" value="<%=question.id%>">
+                                <div class="request">
+                                    <input class="button" type="submit" value="Guess">
+                                </div>
+                            </form>
                         <% } else if(fanswer.correct == 1) {%>
                             <div class="sf success">Success</div>
                         <% } else { %>
