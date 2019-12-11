@@ -303,7 +303,7 @@ app.get("/newQuestion", middlewareCheckUser, function (request, response) {
 
 app.post("/createQuestion", middlewareCheckUser, function (request, response) {
     let answers = request.body.answers.split('\n');
-
+    
     DAOQ.createQuestion(request.body.question, answers, function(err, questionId){
         if(err){
             console.log(err);
