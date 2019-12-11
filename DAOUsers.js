@@ -79,7 +79,7 @@ class DAOUsers {
             }
             else{
                 connection.query(
-                    "SELECT emailUser1 as email, F1.name as name1, F2.name as name2, F1.picture as img1, F2.picture as img2 FROM friends " +
+                    "SELECT emailUser1 as email1, emailUser2 as email2, F1.name as name1, F2.name as name2, F1.picture as img1, F2.picture as img2 FROM friends " +
                     "left join users as F1 ON emailUser1 = F1.email " +
                     "left join users as F2 ON emailUser2 = F2.email " +
                     "WHERE (emailUser1 = ? OR emailUser2 = ?) AND accepted = 1;",
@@ -95,16 +95,16 @@ class DAOUsers {
 
                             if(result.length > 0) {
                                 for(let row of result) {
-                                    if(row.emailUser1 == email) {
+                                    if(row.email1 == email) {
                                         f = {
-                                            email: row.email,
+                                            email: row.email2,
                                             name: row.name2,
                                             img: row.img2
                                         }
                                     }
                                     else {
                                         f = {
-                                            email: row.email,
+                                            email: row.email1,
                                             name: row.name1,
                                             img: row.img1
                                         }

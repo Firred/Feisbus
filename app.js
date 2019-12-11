@@ -62,7 +62,7 @@ function middlewareCheckUser(request, response, next) {
         next();
     }
     else {
-        response.redirect("login");
+        response.redirect("/login");
     }
 }
 
@@ -160,7 +160,7 @@ app.get("/friends", middlewareCheckUser, function (request, response) {
     });
 });
 
-app.post("/createUser", multerImages.single("picture"), function (request, response) {
+app.post("/createUser", middlewareCheckUser, multerImages.single("picture"), function (request, response) {
     let user = {
         email: request.body.mail,
         name: request.body.name,
