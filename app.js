@@ -398,17 +398,6 @@ app.post("/userAnswer/:id", middlewareCheckUser, function (request, response) {
     }
 });
 
-function shuffle(a) {
-    var j, x, i;
-    for (i = a.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = a[i];
-        a[i] = a[j];
-        a[j] = x;
-    }
-    return a;
-}
-
 app.post("/guess", middlewareCheckUser, function (request, response) {
     let friendEmail = request.body.friendEmail;
     let questionId = request.body.questionId;
@@ -437,7 +426,7 @@ app.post("/guess", middlewareCheckUser, function (request, response) {
                                         text : correctAnswer.text
                                     }
                                     answers.push(correct);
-                                    shuffle(answers);
+                                    utils.shuffle(answers);
                                     
                                     response.render("guessQuestion", {question, friend, answers});
                                 }
