@@ -292,7 +292,7 @@ class DAOUsers {
                     params.push(user.email);
                 }
                 else {
-                    'WHERE email = ?;';
+                    sql += 'WHERE email = ?;';
                     params.push(user.email);
                 }
 
