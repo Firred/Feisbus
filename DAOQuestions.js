@@ -222,8 +222,13 @@ class DAOQuestions {
             }
             else{
                 connection.query(
-                    "SELECT name, correct, emailFriend FROM friendAnswer LEFT JOIN users " + 
-                    "ON friendAnswer.emailFriend = users.email WHERE emailUser = ? AND idQuestion = ?;",
+                    "SELECT f.email, f.name, correct " +
+                    "FROM users " +
+                    "LEFT JOIN friends ON (email = emailUser1 OR email = emailUser2) AND accepted = 1 " +
+                    "LEFT JOIN users as f ON (f.email = emailUser1 OR f.email = emailUser2) AND f.email <> users.email " +
+                    "LEFT JOIN userAnswer ON f.email = emailUser " +
+                    "LEFT JOIN friendAnswer ON (friendAnswer.emailUser = f.email) " +
+                    "WHERE users.email = ? AND userAnswer.idQuestion = ?;",
                     [userEmail, questionId],
                     function(err, result) {
                         if(err) {
@@ -238,7 +243,7 @@ class DAOQuestions {
                                     friend = {
                                         name : row.name,
                                         correct : row.correct,
-                                        email : row.emailFriend
+                                        email : row.email
                                     }
                                     friendAnswers.push(friend);
                                 }
