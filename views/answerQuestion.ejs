@@ -27,6 +27,10 @@
                 <div class="request">
                     <input class="button" type="submit" value="Answer">
                 </div>
+
+                <% if(typeof errMsg !== 'undefined'){ %>
+                    <p class="error"><%=errMsg%></p>
+                <% } %>
             </form>
         </div>
     </main>

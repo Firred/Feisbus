@@ -34,8 +34,30 @@ function shuffle(a) {
     return a;
 }
 
+function checkRepeated(list) {
+    let rep = false;
+
+    console.log(list)
+
+    for(let i = 0; !rep && i < list.length-1; i++) {
+        for(let j = i+1; !rep && j < list.length; j++) {
+            if(list[i] == list[j]) {
+                rep = true;
+            }
+        }
+    }
+
+    if(rep == true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 module.exports = { 
     calculateAge: calculateAge,
     formatDate: formatDate,
-    shuffle: shuffle
+    shuffle: shuffle,
+    checkRepeated: checkRepeated
 };

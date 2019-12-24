@@ -47,7 +47,9 @@ function middlewareNotFoundError (request, response) {
 function middlewareServerError (error, request, response, next) {
     // Código 500: Internal server error
     response.status(500);
-    
+
+    console.log(error.message);
+
     response.render("error500", {
         mensaje: error.message
     });
@@ -305,25 +307,39 @@ app.post("/createQuestion", middlewareCheckUser, function (request, response) {
     let question = request.body.question.trim();
     let answers = request.body.answers.split('\n');
 
-    if(question != "" && answers[0] != ""){
-        DAOQ.createQuestion(request.body.question, answers, function(err, questionId){
-            if(err){
-                console.log(err);
+    if(question != "" && answers[0] != "") {
+        DAOQ.existsQuestion(request.body.question, function(err, exists){
+
+            if(!exists) {
+                if(!utils.checkRepeated(answers)) {
+
+                    DAOQ.createQuestion(request.body.question, answers, function(err, questionId){
+                        if(err) {
+                            console.log(err);
+                        }
+                        else {
+                            DAOQ.createAnswers(questionId, answers, function (err){
+                                if(err){
+                                    console.log(err);
+                                }
+                                else{
+                                    response.redirect("/question/" + questionId);
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    response.render("newQuestion", {errMsg: "The answers must be unique."});   
+                }
             }
-            else{
-                DAOQ.createAnswers(questionId, answers, function (err){
-                    if(err){
-                        console.log(err);
-                    }
-                    else{
-                        response.redirect("/question/" + questionId);
-                    }
-                });
+            else {
+                response.render("newQuestion", {errMsg: "A question with the same text already exists."});   
             }
         });
     }
     else{
-        response.redirect("/newQuestion");
+        response.render("newQuestion", {errMsg: "The question and the answers cannot be empty."});
     }
 });
 
@@ -352,7 +368,7 @@ app.get("/question/:id", middlewareCheckUser, function (request, response) {
     });
 });
 
-app.get("/answerQuestion/:id", middlewareCheckUser, function (request, response) {
+app.get("/answerQuestion/:id", middlewareCheckUser, middleMessage, function (request, response) {
     DAOQ.getSingleQuestion(request.params.id, function(err, question){
         if(err){
             console.log(err);
@@ -382,27 +398,41 @@ app.post("/userAnswer/:id", middlewareCheckUser, function (request, response) {
         });
     }
     else{
-        if(request.body.newAnswer != ""){
-            let answers = [];
-            answers.push(request.body.newAnswer);
-            
-            DAOQ.createAnswers(request.params.id, answers, function (err){
+        let newA = request.body.newAnswer.trim();
+
+        if(newA != ""){
+            DAOQ.answerExists(request.params.id, newA, function(err, exists){
                 if(err){
                     console.log(err);
                 }
                 else{
-                    DAOQ.setUserAnswer(response.locals.userEmail, request.params.id, request.body.newAnswer, function(err){
-                        if(err){
-                            console.log(err);
-                        }
-                        else{
-                            response.redirect("/question/" + request.params.id);
-                        }
-                    });
+                    if(!exists) {
+            
+                        DAOQ.createAnswers(request.params.id, [newA], function (err){
+                            if(err){
+                                console.log(err);
+                            }
+                            else{
+                                DAOQ.setUserAnswer(response.locals.userEmail, request.params.id, newA, function(err){
+                                    if(err){
+                                        console.log(err);
+                                    }
+                                    else{
+                                        response.redirect("/question/" + request.params.id);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        request.session.msg = "The answer already exists.";
+                        response.redirect("/answerQuestion/" + request.params.id);
+                    }
                 }
             });
         }
         else{
+            request.session.msg = "The answer cannot be empty";
             response.redirect("/answerQuestion/" + request.params.id);
         }
     }
@@ -499,7 +529,10 @@ app.get("/updateProfile", middlewareCheckUser, function (request, response) {
             console.log(err);
         }
         else {
-            user.birthday = utils.formatDate(user.birthday);
+            if(user.birthday != undefined) {
+                user.birthday = utils.formatDate(user.birthday);
+            }
+
             response.render("updateProfile", {user});
         }
     });

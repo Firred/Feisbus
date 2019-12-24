@@ -41,6 +41,34 @@ class DAOQuestions {
         })
     }
 
+    existsQuestion(text, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    "SELECT FROM questions WHERE text = ?;",
+                    [text],
+                    function(err, result) {
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos") + err);
+                        }
+                        else {
+                            if(result.length > 0) {
+                                callback(null, false);
+                            }
+                            else {
+                                callback(null, true);
+                            }
+                        }
+                        connection.release();
+                    }
+                );          
+            }
+        });
+    }
+
     createQuestion(question, answers, callback) {
         this.pool.getConnection(function(err, connection){
             if(err){
@@ -340,6 +368,34 @@ class DAOQuestions {
                         }
                         else {
                             callback(null);
+                        }
+                        connection.release();
+                    }
+                );          
+            }
+        });
+    }
+
+    answerExists(id, text, callback) {
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    "SELECT * FROM answers WHERE idQuestion = ? AND text = ?",
+                    [id, text],
+                    function(err, result) {
+                        if(err) {
+                            callback(new Error("Error de acceso a la base de datos") + err);
+                        }
+                        else {
+                            if(result.length > 0) {
+                                callback(null, true);
+                            }
+                            else {
+                                callback(null, false);
+                            }
                         }
                         connection.release();
                     }
