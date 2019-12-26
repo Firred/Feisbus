@@ -57,10 +57,19 @@ function middlewareServerError (error, request, response, next) {
 
 function middlewareCheckUser(request, response, next) {
     if(request.session.currentUser != undefined) {
-        response.locals.userEmail = request.session.currentUser;
-        response.locals.userPoints = request.session.userPoints;
+        DAOU.getUser(request.session.currentUser, function(err, user) {
+            if(err) {
+                console.log(err);
 
-        next();
+                response.render("/login", {errMsg: "Session error."});
+            }
+            else {
+                response.locals.userEmail = request.session.currentUser;
+                response.locals.userPoints = user.points;
+
+                next();
+            }
+        });
     }
     else {
         response.redirect("/login");
@@ -93,7 +102,6 @@ app.post("/login", function(request, response) {
 
         if(points !== null){
             request.session.currentUser = request.body.mail;
-            request.session.userPoints = points;
             response.redirect("/profile");
         }
         else{
@@ -186,7 +194,6 @@ app.post("/createUser", multerImages.single("picture"), function (request, respo
                 }
         
                 request.session.currentUser = request.body.mail;
-                request.session.userPoints = 0;
 
                 response.redirect("/profile");
             });
@@ -501,7 +508,6 @@ app.post("/guessAnswer/:id", middlewareCheckUser, function (request, response) {
                                         console.log(err);
                                     }
                                     else {
-                                        request.session.userPoints = points;
                                         response.redirect("/question/" + request.params.id);
                                     }
                             });

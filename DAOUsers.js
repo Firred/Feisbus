@@ -43,11 +43,11 @@ class DAOUsers {
             else {
                 connection.query(
                     "SELECT email, name, gender, birthday, picture, points FROM users WHERE email = ?;",
-                    email, function (err, result) {
+                    [email], function (err, result) {
                         connection.release();
 
                         if(err) {
-                            callback(new Error("Access error in the database"));
+                            callback(new Error("Access error in the database") + err);
                         }
                         else {
                             let user;
