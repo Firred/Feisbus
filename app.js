@@ -555,7 +555,7 @@ app.post("/updateUser", middlewareCheckUser, multerImages.single("picture"), fun
                 pass: request.body.newPassword != "" ? request.body.newPassword : request.body.password,
                 name: request.body.name,
                 gender: request.body.gender,
-                birthday: request.body.birthday,
+                birthday: request.body.birthday != undefined ? request.body.birthday : undefined,
                 picture: request.file != undefined ? request.file.filename : undefined
             }
 
