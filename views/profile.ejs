@@ -13,7 +13,7 @@
             <h1>Your profile</h1>
             <div class="emptycontainer">
                 <div class="profilecontainer">
-                    <img class="profilepic" src="/user/userImage/<%= owner ? "" : user.email %>"/>
+                    <img class="profilepic" src="/userImage/<%= owner ? "" : user.email %>"/>
                     <div class="profile">
                         <h2> <%= user.name %> </h2>
                         <div> <%= user.age %> </div>
@@ -25,11 +25,11 @@
 
             <% if(owner) { %>
                 <div class="request">
-                    <a href="/user/updateProfile" class="button">Update profile</a>
+                    <a href="/updateProfile" class="button">Update profile</a>
                 </div>
                 
                 <div class="emptycontainer">
-                    <form action="/user/addPhoto" method="POST" enctype="multipart/form-data">
+                    <form action="/addPhoto" method="POST" enctype="multipart/form-data">
                         <div class="upload">
                             <div class="formElem"><input type="file" name="photo" class="input"></div>
                             <div class="formElem"><input type="text" name="description" placeholder="Description" class="input"></div>
@@ -49,7 +49,7 @@
                     <div class="photoContainer">
                         <p class="photoDescription"><%= photo.description %></p>
                         <div class="postImg">
-                            <img class="photo" src="/user/getPhoto/<%= photo.name %>">
+                            <img class="photo" src="/getPhoto/<%= photo.name %>">
                         </div>   
                     </div>            
                 <% }); %>

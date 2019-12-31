@@ -2,7 +2,7 @@
 <html lang="ES-ES">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="/css/style.css"/>
+        <link rel="stylesheet" href="css/style.css"/>
         <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
         <title>Search</title>
     </head>
@@ -17,14 +17,14 @@
                 <% users.forEach(user => { %>
                     <div class="searchResults">
                         <div class="requestleft">
-                            <a href="/user/profile/<%=user.email%>"><img class="requestpic" src="/user/userImage/<%=user.email%>" /></a>
-                            <div class="friendname"><a href="/user/profile/<%=user.email%>"><%= user.name %></a></div>
+                            <a href="/profile/<%=user.email%>"><img class="requestpic" src="/userImage/<%=user.email%>" /></a>
+                            <div class="friendname"><a href="/profile/<%=user.email%>"><%= user.name %></a></div>
                         </div>
 
                         <% if(user.email != userEmail) { %>
                             <% if(!user.friend) { %>
                                 <div class="requestright">
-                                    <form action="/friend/requestFriend" method="POST">
+                                    <form action="requestFriend" method="POST">
                                         <input type="hidden" name="user" value="<%= user.email %>">
                                         <input type="submit" value="Request friendship" class="button">
                                     </form>

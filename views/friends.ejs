@@ -2,7 +2,7 @@
 <html lang="ES-ES">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="/css/style.css"/>
+        <link rel="stylesheet" href="css/style.css"/>
         <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
         <title>Friends</title>
     </head>
@@ -15,17 +15,17 @@
                 <%friendRequest.forEach (request => { %>
                     <div class="searchResults">
                         <div class="requestleft">
-                            <a href="/user/profile/<%=request.email%>"><img class="requestpic" src="/user/userImage/<%= request.email %>" /></a>
-                            <div class="friendname"> <a href="/user/profile/<%=request.email%>"> <%= request.name %> </a></div>
+                            <a href="/profile/<%=request.email%>"><img class="requestpic" src="/userImage/<%= request.email %>" /></a>
+                            <div class="friendname"> <a href="/profile/<%=request.email%>"> <%= request.name %> </a></div>
                         </div>
 
                         <div class="requestright">
-                            <form action="/friend/acceptFriend" method="POST">
+                            <form action="acceptFriend" method="POST">
                                 <input type="hidden" name="friend" value="<%=request.email%>">
                                 <input type="submit" value="Accept" class="button doubleButton">
                             </form>
 
-                            <form action="/friend/ignoreFriend" method="POST">
+                            <form action="ignoreFriend" method="POST">
                                 <input type="hidden" name="friend" value="<%=request.email%>">
                                 <input type="submit" value="Ignore" class="button">
                             </form>
@@ -36,7 +36,7 @@
 
             <h1>Search Friends</h1>
             <div class="emptycontainer">
-                <form action="/friend/search" method="POST" class="search">
+                <form action="search" method="POST" class="search">
                     <div class="searchText"><label>Search by name:</label>
                         <input type="text" name="search" class="searchinput">
                     </div>           
@@ -50,8 +50,8 @@
                 <% friends.forEach (friend => { %>
                     <div class="searchResults">
                         <div class="requestleft">
-                                <a href="/user/profile/<%=friend.email%>"><img class="requestpic" src="/user/userImage/<%= friend.email %>" /></a>
-                            <div class="friendname"><a href="/user/profile/<%=friend.email%>"> <%= friend.name %> </a></div>
+                                <a href="/profile/<%=friend.email%>"><img class="requestpic" src="/userImage/<%= friend.email %>" /></a>
+                            <div class="friendname"><a href="/profile/<%=friend.email%>"> <%= friend.name %> </a></div>
                         </div>
                     </div>
                 <% }); %>

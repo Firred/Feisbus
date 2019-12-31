@@ -2,24 +2,24 @@
     <% if(typeof userEmail !== 'undefined') { %>
         <div class="headerleft">
             <div class="title">FaceBluff</div>
-            <div class="links"><a href="/friend/friends">Friends</a></div>
-            <div class="links"><a href="/question/questions">Questions</a></div>
+            <div class="links"><a href="/friends">Friends</a></div>
+            <div class="links"><a href="/questions">Questions</a></div>
         </div>
         <div class="usermenu">
             <div class="points">
-                <img src="/user/userImage" alt="user" class="userpic">
+                <img src="/userImage" alt="user" class="userpic">
                 <b><%= userPoints %></b>
             </div>
             <div class="user">
-                <div class="account"><img src="/img/profile.png" alt="login" class="accimg"><a href="/user/profile">Profile</a></div>
-                <div class="account"><img src="/img/login.png" alt="signin" class="accimg"><a href="/user/logout">Log out</a></div>
+                <div class="account"><img src="/img/profile.png" alt="login" class="accimg"><a href="/profile">Profile</a></div>
+                <div class="account"><img src="/img/login.png" alt="signin" class="accimg"><a href="/logout">Log out</a></div>
             </div>
         </div>
     <% } else { %>
         <div class="title">FaceBluff</div>
         <div class="user">
-            <div class="account"><img src="/img/login.png" alt="login" class="accimg"><a href="/user/login">Log in</a></div>
-            <div class="account"><img src="/img/signin.png" alt="signin" class="accimg"><a href="/user/signin">Sign up</a></div>
+            <div class="account"><img src="img/login.png" alt="login" class="accimg"><a href="/login">Log in</a></div>
+            <div class="account"><img src="img/signin.png" alt="signin" class="accimg"><a href="/signin">Sign up</a></div>
         </div>
     <% } %>
 

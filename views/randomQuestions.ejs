@@ -2,7 +2,7 @@
 <html lang="ES-ES">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="/css/style.css"/>
+        <link rel="stylesheet" href="css/style.css"/>
         <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
         <title>Random Questions</title>
     </head>
@@ -13,12 +13,12 @@
         <h1>Randomly selected questions</h1>
         <div>
             <% questions.forEach(question => { %>
-                <a href="/question/question/<%=question.id%>" class="question"><%=question.text%></a>
+                <a href="/question/<%=question.id%>" class="question"><%=question.text%></a>
             <% }); %>
         </div>
         <h1>Add your questions!!</h1>
         <div class="request">
-            <a href="/question/newQuestion" class="button">Create new question</a>
+            <a href="/newQuestion" class="button">Create new question</a>
         </div>
     </main>
 </body>
