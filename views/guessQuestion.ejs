@@ -13,7 +13,7 @@
         <h1> <%= question.text %></h1>
         <div class="emptycontainer">
             <p>What do you think <%=friend.name%> answered?</p>
-            <form action="/guessAnswer/<%=question.id%>" class="form" method="POST">
+            <form action="/question/guessAnswer/<%=question.id%>" class="form" method="POST">
                 <% answers.forEach(answer => { %>
                     <div class="guess">
                         <input type="radio" name="question" value="<%=answer.text%>" id="<%=answer.text%>">

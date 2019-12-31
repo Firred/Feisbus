@@ -2,7 +2,7 @@
 <html lang="ES-ES">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="css/style.css"/>
+        <link rel="stylesheet" href="/css/style.css"/>
         <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
         <title>Log in</title>
     </head>
@@ -13,7 +13,7 @@
             <h1>My Account</h1>
             <div class="container">
                 <div class="subContainer">
-                    <form action="/login" class="form" method="POST">
+                    <form action="/user/login" class="form" method="POST">
                         <div class="formElem">Email <input class="input" type="text" name="mail" value="" placeholder="user@domain.ext"></div>
                         <div class="formElem">Password <input class="input" type="password" name="password"></div>
                         <input class="button" type="submit" value="Log in">
@@ -23,7 +23,7 @@
                         <p class="error"><%=errMsg%></p>
                     <% } %>
                 </div>
-                <p class="signMessage">Don't have an account? <a href="/signin" class="signUp">Sign up</a></p>
+                <p class="signMessage">Don't have an account? <a href="/user/signin" class="signUp">Sign up</a></p>
             </div>
         </main>
         <footer>

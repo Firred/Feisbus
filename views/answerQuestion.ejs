@@ -12,7 +12,7 @@
     <main>
         <h1><%= question.text %></h1>
         <div>
-            <form action="/userAnswer/<%=question.id%>" class="form" method="POST">
+            <form action="/question/userAnswer/<%=question.id%>" class="form" method="POST">
                 <% answers.forEach(answer => { %>
                     <div class="question">
                         <input type="radio" name="ans" value="<%=answer.text%>" id="<%=answer.text%>"> 
