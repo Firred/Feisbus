@@ -314,7 +314,7 @@ app.post("/createQuestion", middlewareCheckUser, function (request, response) {
     let question = request.body.question.trim();
     let answers = request.body.answers.split('\n');
 
-    if(question != "" && answers[0] != "") {
+    if(question != "" && answers[0].trim() != "") {
         DAOQ.existsQuestion(request.body.question, function(err, exists){
 
             if(!exists) {
